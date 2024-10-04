@@ -61,7 +61,7 @@ mysql> quit;
 1. Clone this repository using `git clone`
 2. Open IntelliJ -> Import Project -> Choose the project you just cloned (The root path must contain the pom.xml!) -> Choose Import project from external model -> choose Maven -> Click on Finish -> The IntelliJ will load automatically
 3. For "Root Directory", right click "cs122b-project1-api-example" -> Mark Directory as -> sources root
-4. In `WebContent/META-INF/context.xml`, make sure the mysql username is `mytestuser` and password is `mypassword`.
+4. In `WebContent/META-INF/context.xml`, make sure the mysql username is `mytestuser` and password is `My6$Password`.
 5. Also make sure you have the `moviedbexample` database.
 6. To run the example, follow the instructions in canvas.
 
