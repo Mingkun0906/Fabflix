@@ -30,17 +30,29 @@ function handleStarResult(resultData) {
             '</a></td>';
         rowHTML += "<td>" + resultData[i]["movie_year"] + "</td>";
         rowHTML += "<td>" + resultData[i]["movie_director"] + "</td>";
-        rowHTML += "<td>" + resultData[i]["movie_rating"] + "</td>";
 
         rowHTML += "<td>";
-        if (resultData[i]["movie_stars"]) {
-            let stars = resultData[i]["movie_stars"].split(', ');
-            for (let j = 0; j < stars.length; j++) {
+        if (resultData[i]["movie_genres"]) {
+            let genres = resultData[i]["movie_genres"].split(', ');
+            for (let j = 0; j < genres.length; j++) {
                 if (j > 0) rowHTML += ", ";
-                rowHTML += '<a href="single-star.html?name=' + encodeURIComponent(stars[j]) + '">' + stars[j] + '</a>';
+                rowHTML += genres[j];
             }
         }
         rowHTML += "</td>";
+
+
+        rowHTML += "<td>";
+        if (resultData[i]["stars_info"]) {
+            let stars = resultData[i]["stars_info"].split(', ');
+            for (let j = 0; j < stars.length; j++) {
+                if (j > 0) rowHTML += ", ";
+                let [starId, starName] = stars[j].split('::');
+                rowHTML += '<a href="single-star.html?id=' + encodeURIComponent(starId) + '">' + starName + '</a>';
+            }
+        }
+        rowHTML += "</td>";
+        rowHTML += "<td>" + resultData[i]["movie_rating"] + "</td>";
         rowHTML += "</tr>";  // End of the row
 
 
