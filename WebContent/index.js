@@ -30,6 +30,17 @@ function handleStarResult(resultData) {
             '</a></td>';
         rowHTML += "<td>" + resultData[i]["movie_year"] + "</td>";
         rowHTML += "<td>" + resultData[i]["movie_director"] + "</td>";
+        rowHTML += "<td>" + resultData[i]["movie_rating"] + "</td>";
+
+        rowHTML += "<td>";
+        if (resultData[i]["movie_stars"]) {
+            let stars = resultData[i]["movie_stars"].split(', ');
+            for (let j = 0; j < stars.length; j++) {
+                if (j > 0) rowHTML += ", ";
+                rowHTML += '<a href="single-star.html?name=' + encodeURIComponent(stars[j]) + '">' + stars[j] + '</a>';
+            }
+        }
+        rowHTML += "</td>";
         rowHTML += "</tr>";  // End of the row
 
 
