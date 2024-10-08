@@ -22,7 +22,7 @@ function handleStarResult(resultData) {
     let movieTableBodyElement = jQuery("#movie_table_body");
     // Iterate through resultData, no more than 10 entries
     for (let i = 0; i < Math.min(20, resultData.length); i++) {
-
+        console.log(resultData[i]["movie_rating"])
         // Concatenate the html tags with resultData jsonObject
         let rowHTML = "<tr>";
         rowHTML += '<td><a href="single-movie.html?id=' + resultData[i]['movie_id'] + '">'
