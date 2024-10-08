@@ -46,10 +46,16 @@ public class MoviesServlet extends HttpServlet {
             // Declare our statement
             Statement statement = conn.createStatement();
 
-            String query = "SELECT m.id, m.title, m.year, m.director, r.rating\n" +
-                    "FROM movies m\n" +
-                    "JOIN ratings r ON m.id = r.movieId\n" +
-                    "ORDER BY r.rating DESC\n" +
+            String query = "SELECT m.id, m.title, m.year, m.director, r.rating, " +
+                    "(SELECT GROUP_CONCAT(s.name ORDER BY s.name ASC SEPARATOR ', ') " +
+                    "FROM (SELECT DISTINCT sim.starId " +
+                    "      FROM stars_in_movies sim " +
+                    "      WHERE sim.movieId = m.id " +
+                    "      LIMIT 3) top_stars " +
+                    "JOIN stars s ON top_stars.starId = s.id) AS star_names " +
+                    "FROM movies m " +
+                    "JOIN ratings r ON m.id = r.movieId " +
+                    "ORDER BY r.rating DESC " +
                     "LIMIT 20;";
 
             // Perform the query
@@ -63,6 +69,8 @@ public class MoviesServlet extends HttpServlet {
                 String movie_title = rs.getString("title");
                 String movie_year = rs.getString("year");
                 String movie_director = rs.getString("director");
+                String movie_rating = rs.getString("rating");
+                String star_names = rs.getString("star_names");
 
                 // Create a JsonObject based on the data we retrieve from rs
                 JsonObject jsonObject = new JsonObject();
@@ -70,9 +78,13 @@ public class MoviesServlet extends HttpServlet {
                 jsonObject.addProperty("movie_title", movie_title);
                 jsonObject.addProperty("movie_year", movie_year);
                 jsonObject.addProperty("movie_director", movie_director);
+                jsonObject.addProperty("movie_rating", movie_rating);
+                jsonObject.addProperty("movie_stars", star_names);
 
                 jsonArray.add(jsonObject);
             }
+
+            rs = statement.executeQuery(query);
             rs.close();
             statement.close();
 
