@@ -45,9 +45,14 @@ function handleResult(resultData) {
     let movieInfoElement = jQuery("#movie_info");
 
     // append two html <p> created to the h3 body, which will refresh the page
-    movieInfoElement.append("<p>Movie Title: " + resultData[0]["movie_title"] + "</p>" +
+    movieInfoElement.append(
+        "<p>Movie Title: " + resultData[0]["movie_title"] + "</p>" +
         "<p>Year Released: " + resultData[0]["movie_year"] + "</p>" +
-        "<p>Director: " + resultData[0]["movie_director"] + "</p>");
+        "<p>Director: " + resultData[0]["movie_director"] + "</p>" +
+        "<p>Genres: " + resultData[0]["movie_genres"] + "</p>" +
+        "<p>Stars: " + resultData[0]["movie_stars"] + "</p>" +
+        "<p>Rating: " + resultData[0]["movie_rating"] + "</p>"
+    );
 
     console.log("handleResult: populating movie table from resultData");
 
@@ -62,6 +67,9 @@ function handleResult(resultData) {
         rowHTML += "<th>" + resultData[i]["movie_title"] + "</th>";
         rowHTML += "<th>" + resultData[i]["movie_year"] + "</th>";
         rowHTML += "<th>" + resultData[i]["movie_director"] + "</th>";
+        rowHTML += "<th>" + resultData[i]["movie_genres"] + "</th>";
+        rowHTML += "<th>" + resultData[i]["movie_stars"] + "</th>";
+        rowHTML += "<th>" + resultData[i]["movie_rating"] + "</th>";
         rowHTML += "</tr>";
 
         // Append the row created to the table body, which will refresh the page
@@ -74,12 +82,12 @@ function handleResult(resultData) {
  */
 
 // Get id from URL
-let starId = getParameterByName('id');
+let movieid = getParameterByName('id');
 
 // Makes the HTTP GET request and registers on success callback function handleResult
 jQuery.ajax({
     dataType: "json",  // Setting return data type
     method: "GET",// Setting request method
-    url: "api/single-movie?id=" + starId, // Setting request url, which is mapped by StarsServlet in Stars.java
+    url: "api/single-movie?id=" + movieid, // Setting request url, which is mapped by StarsServlet in Stars.java
     success: (resultData) => handleResult(resultData) // Setting callback function to handle data returned successfully by the SingleStarServlet
 });
