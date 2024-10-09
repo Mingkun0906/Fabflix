@@ -69,7 +69,7 @@ public class SingleMovieServlet extends HttpServlet {
                     "LEFT JOIN stars s ON sim.starId = s.id " +
                     "WHERE m.id = ? "
                     ;
-            query = "select * from movies where id = ?";
+            //query = "select * from movies where id = ?";
             // Declare our statement
             PreparedStatement statement = conn.prepareStatement(query);
 
