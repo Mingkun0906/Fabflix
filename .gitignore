@@ -2,4 +2,3 @@
 *.iml
 target/
 /sql/movie-data.sql
-/WebContent/META-INF/context.xml
