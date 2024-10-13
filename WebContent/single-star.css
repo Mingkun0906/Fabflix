@@ -1,0 +1,160 @@
+/* Reset and base styles */
+body {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    background-color: #141414;
+    color: #ffffff;
+    margin: 0;
+    padding: 20px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Header and navigation styles */
+.d-flex {
+    padding: 10px 0;
+}
+
+a {
+    color: #e50914;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: #ff3d3d;
+    text-decoration: none;
+}
+
+h1 {
+    font-size: 3rem;
+    font-weight: bold;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+/* Star info styles */
+#star_info {
+    background-color: #181818;
+    padding: 30px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+    font-size: 1.2rem;
+}
+
+/* Table styles */
+.table {
+    background-color: #181818;
+    color: #ffffff;
+    border-collapse: separate;
+    border-spacing: 0 10px;
+    width: 100%;
+}
+
+.table thead th {
+    background-color: #202020;
+    border: none;
+    font-size: 1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    padding: 15px;
+    color: #e5e5e5;
+}
+
+.table tbody tr {
+    background-color: #222222;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.table tbody tr:hover {
+    transform: scale(1.02);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+    cursor: pointer;
+}
+
+.table td {
+    padding: 15px;
+    border: none;
+    vertical-align: middle;
+}
+
+/* Column-specific styles */
+.table td:first-child {
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.table td:nth-child(2),
+.table td:nth-child(3) {
+    font-size: 0.9rem;
+    color: #b3b3b3;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    #star_info {
+        padding: 20px;
+    }
+
+    .table thead {
+        display: none;
+    }
+
+    .table, .table tbody, .table tr, .table td {
+        display: block;
+        width: 100%;
+    }
+
+    .table tr {
+        margin-bottom: 15px;
+        background-color: #222222;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    .table td {
+        text-align: right;
+        padding-left: 50%;
+        position: relative;
+    }
+
+    .table td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 6px;
+        width: 45%;
+        padding-right: 10px;
+        white-space: nowrap;
+        text-align: left;
+        font-weight: bold;
+    }
+}
+
+/* Scrollbar styles */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #141414;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #686868;
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #b3b3b3;
+}

@@ -1,0 +1,143 @@
+/* Reset and base styles */
+body {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    background-color: #141414;
+    color: #ffffff;
+    margin: 0;
+    padding: 20px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Header and navigation styles */
+.d-flex {
+    padding: 10px 0;
+}
+
+a {
+    color: #e50914;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: #ff3d3d;
+    text-decoration: none;
+}
+
+h1 {
+    font-size: 3rem;
+    font-weight: bold;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+/* Movie info styles */
+#movie_info {
+    background-color: #181818;
+    padding: 30px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+}
+
+/* Table styles */
+table {
+    width: 100%;
+    background-color: #181818;
+    color: #ffffff;
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+}
+
+th, td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #2c2c2c;
+}
+
+th {
+    background-color: #202020;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    color: #e5e5e5;
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+tr:hover {
+    background-color: #202020;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    #movie_info {
+        padding: 20px;
+    }
+
+    table, thead, tbody, th, td, tr {
+        display: block;
+    }
+
+    thead tr {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+    }
+
+    tr {
+        margin-bottom: 15px;
+    }
+
+    td {
+        border: none;
+        position: relative;
+        padding-left: 50%;
+    }
+
+    td:before {
+        position: absolute;
+        top: 6px;
+        left: 6px;
+        width: 45%;
+        padding-right: 10px;
+        white-space: nowrap;
+        content: attr(data-label);
+        font-weight: bold;
+    }
+}
+
+/* Scrollbar styles */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #141414;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #686868;
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #b3b3b3;
+}
