@@ -18,13 +18,11 @@ body {
 }
 
 a {
-    color: #e50914;
     text-decoration: none;
     transition: color 0.3s ease;
 }
 
 a:hover {
-    color: #ff3d3d;
     text-decoration: none;
 }
 
