@@ -3,10 +3,8 @@
 This is a movie web application that allows users to view a list of movies and click on individual movies to see more 
 detailed information, including the top stars and genres for each movie.
 
-## Project Structure
-
-- **Backend**: Java Servlets, MySQL with connection pooling via a DataSource
-- **Frontend**: HTML with Bootstrap and JavaScript
+## Video url
+- https://youtu.be/ahCbn9ZfatM
 
 
 ## Contributions
