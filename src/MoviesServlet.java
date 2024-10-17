@@ -14,6 +14,7 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import jakarta.servlet.http.HttpSession;
 
 @WebServlet(name = "MoviesServlet", urlPatterns = "/api/movies")
 public class MoviesServlet extends HttpServlet {
@@ -34,6 +35,14 @@ public class MoviesServlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+        HttpSession session = request.getSession(false); // false = don't create session if it doesn't exist
+
+        if (session == null || session.getAttribute("user") == null) {
+            // No session, redirect to login page
+            response.sendRedirect("login.html");
+            return;
+        }
 
         response.setContentType("application/json"); // Response mime type
 
