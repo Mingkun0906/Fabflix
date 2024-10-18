@@ -64,7 +64,7 @@ public class LoginServlet extends HttpServlet {
                 session.setAttribute("user", email);
 
                 // Redirect to the main page after successful login
-                response.sendRedirect("index.html");
+                response.sendRedirect("movie-list.html");
             } else {
                 // Invalid credentials, redirect to login page with error
                 response.sendRedirect("login.html?error=invalid_credentials");
