@@ -15,6 +15,8 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import jakarta.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
 
 @WebServlet(name = "MoviesServlet", urlPatterns = "/api/movies")
 public class MoviesServlet extends HttpServlet {
@@ -52,28 +54,49 @@ public class MoviesServlet extends HttpServlet {
         // Get a connection from dataSource and let resource manager close the connection after usage.
         try (Connection conn = dataSource.getConnection()) {
 
-            // Declare our statement
-            Statement statement = conn.createStatement();
+            String title = request.getParameter("title");
+            String year = request.getParameter("year");
+            String director = request.getParameter("director");
+            String star = request.getParameter("star");
 
-            String query = "SELECT m.id, m.title, m.year, m.director, r.rating, " +
-                    "(SELECT GROUP_CONCAT(CONCAT(s.id, '::', s.name) ORDER BY s.name ASC SEPARATOR ', ') " +
-                    "FROM (SELECT DISTINCT sim.starId " +
-                    "      FROM stars_in_movies sim " +
-                    "      WHERE sim.movieId = m.id " +
-                    "      LIMIT 3) top_stars " +
-                    "JOIN stars s ON top_stars.starId = s.id) AS stars_info, " +
+            List<String> conditions = new ArrayList<>();
+
+            if (title != null && !title.isEmpty()) {
+                conditions.add("m.title LIKE '%" + title + "%'");
+            }
+            if (year != null && !year.isEmpty()) {
+                conditions.add("m.year = " + year);
+            }
+            if (director != null && !director.isEmpty()) {
+                conditions.add("m.director LIKE '%" + director + "%'");
+            }
+            if (star != null && !star.isEmpty()) {
+                conditions.add("s.name LIKE '%" + star + "%'");
+            }
+
+
+            String baseQuery = "SELECT DISTINCT m.id, m.title, m.year, m.director, r.rating, " +
+                    "(SELECT GROUP_CONCAT(CONCAT(s2.id, '::', s2.name) ORDER BY s2.name ASC SEPARATOR ', ') " +
+                    "FROM (SELECT DISTINCT sim.starId FROM stars_in_movies sim WHERE sim.movieId = m.id LIMIT 3) top_stars " +
+                    "JOIN stars s2 ON top_stars.starId = s2.id) AS stars_info, " +
                     "(SELECT GROUP_CONCAT(g.name ORDER BY g.name ASC SEPARATOR ', ') " +
-                    "FROM (SELECT DISTINCT gim.genreId " +
-                    "      FROM genres_in_movies gim " +
-                    "      WHERE gim.movieId = m.id " +
-                    "      LIMIT 3) top_genres " +
+                    "FROM (SELECT DISTINCT gim.genreId FROM genres_in_movies gim WHERE gim.movieId = m.id LIMIT 3) top_genres " +
                     "JOIN genres g ON top_genres.genreId = g.id) AS genre_names " +
                     "FROM movies m " +
                     "JOIN ratings r ON m.id = r.movieId " +
-                    "ORDER BY r.rating DESC " +
-                    "LIMIT 20;";
+                    "LEFT JOIN stars_in_movies sim ON m.id = sim.movieId " +
+                    "LEFT JOIN stars s ON sim.starId = s.id";
+
+            if (!conditions.isEmpty()) {
+                baseQuery += " WHERE " + String.join(" AND ", conditions);
+            }
+
+            baseQuery += " ORDER BY r.rating DESC LIMIT 20";
+
+            Statement statement = conn.createStatement();
+
             // Perform the query
-            ResultSet rs = statement.executeQuery(query);
+            ResultSet rs = statement.executeQuery(baseQuery);
 
             JsonArray jsonArray = new JsonArray();
 
@@ -99,8 +122,6 @@ public class MoviesServlet extends HttpServlet {
 
                 jsonArray.add(jsonObject);
             }
-
-            rs = statement.executeQuery(query);
             rs.close();
             statement.close();
 
