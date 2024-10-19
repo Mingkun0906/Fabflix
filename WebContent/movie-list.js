@@ -21,7 +21,7 @@ function handleStarResult(resultData) {
     // Find the empty table body by id "star_table_body"
     let movieTableBodyElement = jQuery("#movie_table_body");
     // Iterate through resultData, no more than 10 entries
-    for (let i = 0; i < Math.min(20, resultData.length); i++) {
+    for (let i = 0; i < resultData.length; i++) {
         console.log(resultData[i]["movie_rating"])
         // Concatenate the html tags with resultData jsonObject
         let rowHTML = "<tr>";
@@ -62,14 +62,20 @@ function handleStarResult(resultData) {
 }
 
 
-/**
- * Once this .js is loaded, following scripts will be executed by the browser
- */
+const urlParams = new URLSearchParams(window.location.search);
+
+// Construct the API URL with query parameters
+let apiUrl = "api/movies";
+
+// Check if there are any query parameters
+if (urlParams.toString()) {
+    apiUrl += "?" + urlParams.toString();
+}
 
 // Makes the HTTP GET request and registers on success callback function handleStarResult
 jQuery.ajax({
     dataType: "json", // Setting return data type
     method: "GET", // Setting request method
-    url: "api/movies", // Setting request url, which is mapped by StarsServlet in Stars.java
+    url: apiUrl, // Setting request url, which is mapped by StarsServlet in Stars.java
     success: (resultData) => handleStarResult(resultData) // Setting callback function to handle data returned successfully by the StarsServlet
 });
