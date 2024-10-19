@@ -58,17 +58,19 @@ public class SingleMovieServlet extends HttpServlet {
                     "m.title AS movie_title, " +
                     "m.year AS movie_year, " +
                     "m.director AS movie_director, " +
+                    "r.rating AS movie_rating, " +
                     "GROUP_CONCAT(DISTINCT g.name ORDER BY g.name ASC) AS movie_genres, " +
-                    "GROUP_CONCAT(DISTINCT CONCAT('<a href=\"single-star.html?id=', s.id, '\">', s.name, '</a>') ORDER BY s.name ASC) AS movie_stars, " +
-                    "r.rating AS movie_rating " +
+                    "(SELECT GROUP_CONCAT(DISTINCT CONCAT(s.id, '::', s.name) ORDER BY movie_count DESC, s.name ASC SEPARATOR ', ') " +
+                    " FROM stars s " +
+                    " JOIN stars_in_movies sim ON s.id = sim.starId " +
+                    " JOIN (SELECT starId, COUNT(movieId) AS movie_count " +
+                    "       FROM stars_in_movies GROUP BY starId) AS star_movies ON s.id = star_movies.starId " +
+                    " WHERE sim.movieId = m.id) AS movie_stars " +
                     "FROM movies m " +
                     "LEFT JOIN ratings r ON m.id = r.movieId " +
                     "LEFT JOIN genres_in_movies gim ON m.id = gim.movieId " +
                     "LEFT JOIN genres g ON gim.genreId = g.id " +
-                    "LEFT JOIN stars_in_movies sim ON m.id = sim.movieId " +
-                    "LEFT JOIN stars s ON sim.starId = s.id " +
-                    "WHERE m.id = ? "
-                    ;
+                    "WHERE m.id = ?";
             //query = "select * from movies where id = ?";
             // Declare our statement
             PreparedStatement statement = conn.prepareStatement(query);

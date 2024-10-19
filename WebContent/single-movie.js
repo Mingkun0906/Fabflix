@@ -31,6 +31,19 @@ function getParameterByName(target) {
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
+function formatStars(starsString) {
+    let starsArray = starsString.split(', ');
+    let starsHTML = "";
+
+    starsArray.forEach(star => {
+        let [starId, starName] = star.split('::');
+        starsHTML += `<a href="single-star.html?id=${starId}">${starName}</a>, `;
+    });
+
+    // Remove last comma and return
+    return starsHTML.slice(0, -2);
+}
+
 /**
  * Handles the data returned by the API, read the jsonObject and populate data into html elements
  * @param resultData jsonObject
@@ -41,15 +54,18 @@ function handleResult(resultData) {
     console.log("handleResult: populating movie info from resultData");
 
     let movieInfoElement = jQuery("#movie_info");
+    const genresArray = resultData[0]["movie_genres"].split(',');
+    const genresHTML = genresArray.map(genre => `<span>${genre.trim()}</span>`).join(', ');
 
     // append two html <p> created to the h3 body, which will refresh the page
-    movieInfoElement.append("<p>Movie Title: " + resultData[0]["movie_title"] + "</p>" +
-        "<p>Year Released: " + resultData[0]["movie_year"] + "</p>" +
-        "<p>Director: " + resultData[0]["movie_director"] + "</p>" +
-        "<p>Genres: " + resultData[0]["movie_genres"] + "</p>" +
-        "<p>Stars: " + resultData[0]["movie_stars"] + "</p>" +
-        "<p>Rating: " + resultData[0]["movie_rating"] + "</p>"
-    );
+    movieInfoElement.append(`
+        <p><strong>Title:</strong> ${resultData[0]["movie_title"]}</p>
+        <p><strong>Year Released:</strong> ${resultData[0]["movie_year"]}</p>
+        <p><strong>Director:</strong> ${resultData[0]["movie_director"]}</p>
+        <p><strong>Rating:</strong> ${resultData[0]["movie_rating"]}</p>
+        <p><strong>Genres:</strong> ${genresHTML}</p>
+        <p><strong>Stars:</strong> ${formatStars(resultData[0]["movie_stars"])}</p>
+    `);
 
     console.log("handleResult: populating movie table from resultData");
 }
