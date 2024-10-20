@@ -14,19 +14,19 @@ body {
 }
 
 /* Header styles */
-h1 {
-    font-size: 3rem;
+h1, h2 {
+    font-size: 3rem; /* Adjust font size if needed */
     font-weight: bold;
     margin-bottom: 30px;
     text-align: center;
-    color: #e50914;
+    color: #e50914; /* Consistent red color */
 }
 
 h2 {
-    font-size: 2rem;
-    color: #e50914;
+    font-size: 2rem; /* Smaller than h1 */
     margin-bottom: 20px;
-    text-align: center;
+    color: #e50914; /* Exact same color as h1 */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); /* Optional: add shadow for better visibility */
 }
 
 /* Search container styles */
@@ -62,8 +62,8 @@ h2 {
 }
 
 .btn-primary {
-    background-color: #e50914;
-    border-color: #e50914;
+    background-color: #ff000e;
+    border-color: #ff000e;
     height: 38px;
     padding-top: 0;
     padding-bottom: 0;
@@ -73,8 +73,8 @@ h2 {
 }
 
 .btn-primary:hover {
-    background-color: #f40612;
-    border-color: #f40612;
+    background-color: #ff000e;
+    border-color: #ff000e;
 }
 
 /* Browse container styles */
@@ -104,7 +104,7 @@ h2 {
 }
 
 .genre-link:hover, .alphabet-link:hover {
-    background-color: #e50914;
+    background-color: #ff000e;
     color: #ffffff;
     text-decoration: none;
     transform: scale(1.1); /* Slight scaling for better UX */

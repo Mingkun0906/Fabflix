@@ -1,17 +1,16 @@
 /* Style the entire page with a dark background */
 body {
-    background-color: #141414;
-    color: #e5e5e5;
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    height: 100vh;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    background: url('https://wallpapercat.com/w/full/d/f/0/37823-2560x1600-desktop-hd-the-dark-knight-background-photo.jpg') no-repeat center center fixed; /* Set the image as background */
+    background-size: cover; /* Make the background cover the full page */
+    color: #ffffff;
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
+    height: 100vh; /* Full viewport height */
+    margin: 0;
 }
 
-/* Center the login container */
 .container {
     background-color: rgba(0, 0, 0, 0.75);
     padding: 40px;
@@ -32,7 +31,7 @@ h2 {
 
 /* Style form labels */
 .form-group label {
-    color: #b3b3b3;
+    color: #ffffff;
     font-size: 14px;
 }
 
@@ -53,8 +52,8 @@ h2 {
 
 /* Style the login button */
 .btn-primary {
-    background-color: #fff;
-    color: #000000;
+    background-color: #f40612;
+    color: #fff;
     border: none;
     width: 100%;
     font-size: 16px;
