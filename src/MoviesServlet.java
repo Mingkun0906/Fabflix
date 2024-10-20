@@ -76,16 +76,23 @@ public class MoviesServlet extends HttpServlet {
 
 
             String baseQuery = "SELECT DISTINCT m.id, m.title, m.year, m.director, r.rating, " +
-                    "(SELECT GROUP_CONCAT(CONCAT(s2.id, '::', s2.name) ORDER BY s2.name ASC SEPARATOR ', ') " +
-                    "FROM (SELECT DISTINCT sim.starId FROM stars_in_movies sim WHERE sim.movieId = m.id LIMIT 3) top_stars " +
-                    "JOIN stars s2 ON top_stars.starId = s2.id) AS stars_info, " +
+                    "(SELECT GROUP_CONCAT(CONCAT(star_info.id, '::', star_info.name, '::', star_info.movie_count) " +
+                    "                    ORDER BY star_info.movie_count DESC, star_info.name ASC " +
+                    "                    SEPARATOR ', ') " +
+                    "FROM (SELECT DISTINCT s.id, s.name, " +
+                    "             (SELECT COUNT(*) FROM stars_in_movies WHERE starId = s.id) as movie_count " +
+                    "      FROM stars s " +
+                    "      JOIN stars_in_movies sim ON s.id = sim.starId " +
+                    "      WHERE sim.movieId = m.id " +
+                    "      ORDER BY movie_count DESC, s.name ASC " +
+                    "      LIMIT 3) star_info) AS stars_info, " +
                     "(SELECT GROUP_CONCAT(g.name ORDER BY g.name ASC SEPARATOR ', ') " +
-                    "FROM (SELECT DISTINCT gim.genreId FROM genres_in_movies gim WHERE gim.movieId = m.id LIMIT 3) top_genres " +
+                    "FROM (SELECT DISTINCT gim.genreId " +
+                    "      FROM genres_in_movies gim " +
+                    "      WHERE gim.movieId = m.id LIMIT 3) top_genres " +
                     "JOIN genres g ON top_genres.genreId = g.id) AS genre_names " +
                     "FROM movies m " +
-                    "JOIN ratings r ON m.id = r.movieId " +
-                    "LEFT JOIN stars_in_movies sim ON m.id = sim.movieId " +
-                    "LEFT JOIN stars s ON sim.starId = s.id";
+                    "JOIN ratings r ON m.id = r.movieId";
 
             if (!conditions.isEmpty()) {
                 baseQuery += " WHERE " + String.join(" AND ", conditions);
