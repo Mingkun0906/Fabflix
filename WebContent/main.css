@@ -10,6 +10,7 @@ body {
 .container {
     max-width: 1200px;
     margin: 0 auto;
+    padding: 0 15px; /* Add padding for better alignment */
 }
 
 /* Header styles */
@@ -44,13 +45,10 @@ h2 {
     align-items: stretch;
 }
 
-/* NEW: Added styles for form groups */
 .form-group {
     flex: 1 1 200px;
     margin: 0 10px 10px 0;
 }
-
-
 
 .form-control {
     background-color: #333;
@@ -66,12 +64,12 @@ h2 {
 .btn-primary {
     background-color: #e50914;
     border-color: #e50914;
-    height: 38px; /* NEW: Match the height of input fields */
-    padding-top: 0; /* NEW */
-    padding-bottom: 0; /* NEW */
-    display: flex; /* NEW */
-    align-items: center; /* NEW */
-    justify-content: center; /* NEW */
+    height: 38px;
+    padding-top: 0;
+    padding-bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .btn-primary:hover {
@@ -92,21 +90,31 @@ h2 {
     text-align: center;
 }
 
+/* Genre and Alphabet Link styles */
 .genre-link, .alphabet-link {
     color: #ffffff;
     text-decoration: none;
     margin: 5px;
-    padding: 5px 10px;
+    padding: 8px 12px;
     background-color: #333;
     border-radius: 20px;
     display: inline-block;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Add scaling effect */
+    font-size: 1rem; /* Consistent font size */
 }
 
 .genre-link:hover, .alphabet-link:hover {
     background-color: #e50914;
     color: #ffffff;
     text-decoration: none;
+    transform: scale(1.1); /* Slight scaling for better UX */
+}
+
+/* Adjust genre and alphabet links for better spacing and layout */
+.d-flex.flex-wrap .genre-link,
+.d-flex.flex-wrap .alphabet-link {
+    margin: 5px; /* Add space around links */
+    padding: 10px 15px; /* Increase padding for better clickability */
 }
 
 /* Responsive adjustments */
@@ -126,6 +134,7 @@ h2 {
     .search-container, .browse-container {
         padding: 20px;
     }
+
     .form-group {
         flex-basis: 100%;
         margin-right: 0;
@@ -134,6 +143,12 @@ h2 {
     .btn-primary {
         width: 100%;
         margin-top: 10px;
+    }
+
+    .genre-link, .alphabet-link {
+        font-size: 0.9rem;
+        padding: 8px 12px;
+        margin: 5px;
     }
 }
 
