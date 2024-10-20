@@ -53,6 +53,8 @@ h2 {
 
 /* Style the login button */
 .btn-primary {
+    background-color: #fff;
+    color: #000000;
     border: none;
     width: 100%;
     font-size: 16px;

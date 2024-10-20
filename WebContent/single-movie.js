@@ -53,9 +53,13 @@ function handleResult(resultData) {
 
     console.log("handleResult: populating movie info from resultData");
 
+    let movieTitle = resultData[0]["movie_title"];
+    document.querySelector("h1").textContent = movieTitle;
     let movieInfoElement = jQuery("#movie_info");
     const genresArray = resultData[0]["movie_genres"].split(',');
-    const genresHTML = genresArray.map(genre => `<span>${genre.trim()}</span>`).join(', ');
+    const genresHTML = genresArray.map(genre =>
+        `<a href="movie-list.html?genre=${encodeURIComponent(genre.trim())}" class="genre-link">${genre.trim()}</a>`
+    ).join(', ');
 
     // append two html <p> created to the h3 body, which will refresh the page
     movieInfoElement.append(`
@@ -69,6 +73,19 @@ function handleResult(resultData) {
 
     console.log("handleResult: populating movie table from resultData");
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Add "Back to Movie List" button functionality
+    const backButton = document.getElementById('back-to-movie-list');
+    backButton.addEventListener('click', function() {
+        const state = JSON.parse(sessionStorage.getItem('movieListState'));
+        if (state) {
+            window.location.href = `movie-list.html?${state.searchParams}&page=${state.page}`;
+        } else {
+            window.location.href = 'movie-list.html';
+        }
+    });
+});
 
 /**
  * Once this .js is loaded, following scripts will be executed by the browser\

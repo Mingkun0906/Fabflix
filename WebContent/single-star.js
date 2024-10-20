@@ -45,6 +45,7 @@ function handleResult(resultData) {
     let starInfoElement = jQuery("#star_info")
 
     let starName = resultData[0]["star_name"];
+    document.querySelector("h1").textContent = starName;
     let starDob = resultData[0]["star_dob"];
     starDob = (starDob === null) ? "N/A" : starDob;
 
