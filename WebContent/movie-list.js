@@ -8,6 +8,13 @@
  *      2. Populate the data to correct html elements.
  */
 
+function saveMovieListState() {
+    const state = {
+        searchParams: urlParams.toString(),
+        page: urlParams.get('page') || 1, // assuming there's a 'page' parameter
+    };
+    sessionStorage.setItem('movieListState', JSON.stringify(state));
+}
 
 /**
  * Handles the data returned by the API, read the jsonObject and populate data into html elements
@@ -15,18 +22,13 @@
  */
 function handleStarResult(resultData) {
     console.log("handleMovieResult: populating Movie table from resultData");
-    console.log("end");
 
-    // Populate the star table
-    // Find the empty table body by id "star_table_body"
     let movieTableBodyElement = jQuery("#movie_table_body");
-    // Iterate through resultData, no more than 10 entries
+
     for (let i = 0; i < resultData.length; i++) {
-        console.log(resultData[i]["movie_rating"])
-        // Concatenate the html tags with resultData jsonObject
         let rowHTML = "<tr>";
-        rowHTML += '<td><a href="single-movie.html?id=' + resultData[i]['movie_id'] + '">'
-            + resultData[i]["movie_title"] +     // Change "movie_name" to "movie_title"
+        rowHTML += '<td><a href="single-movie.html?id=' + resultData[i]['movie_id'] + '" onclick="saveMovieListState()">'
+            + resultData[i]["movie_title"] +
             '</a></td>';
         rowHTML += "<td>" + resultData[i]["movie_year"] + "</td>";
         rowHTML += "<td>" + resultData[i]["movie_director"] + "</td>";
@@ -41,25 +43,26 @@ function handleStarResult(resultData) {
         }
         rowHTML += "</td>";
 
-
         rowHTML += "<td>";
         if (resultData[i]["stars_info"]) {
             let stars = resultData[i]["stars_info"].split(', ');
             for (let j = 0; j < stars.length; j++) {
                 if (j > 0) rowHTML += ", ";
                 let [starId, starName] = stars[j].split('::');
-                rowHTML += '<a href="single-star.html?id=' + encodeURIComponent(starId) + '">' + starName + '</a>';
+                rowHTML += '<a href="single-star.html?id=' + encodeURIComponent(starId) + '" onclick="saveMovieListState()">' + starName + '</a>';
             }
         }
         rowHTML += "</td>";
+
         rowHTML += "<td>" + resultData[i]["movie_rating"] + "</td>";
-        rowHTML += "</tr>";  // End of the row
+        rowHTML += "</tr>";
 
-
-        // Append the row created to the table body, which will refresh the page
         movieTableBodyElement.append(rowHTML);
     }
 }
+
+
+
 
 
 const urlParams = new URLSearchParams(window.location.search);

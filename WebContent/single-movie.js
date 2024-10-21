@@ -76,7 +76,13 @@ function handleResult(resultData) {
 
 document.addEventListener('DOMContentLoaded', function() {
     // Add "Back to Movie List" button functionality
-    const backButton = document.getElementById('back-to-movie-list');
+    const backButton = document.createElement('button');
+    backButton.id = 'back-to-movie-list';
+    backButton.textContent = 'Back to Movie List';
+    backButton.classList.add('btn', 'btn-primary', 'mt-3'); // Add Bootstrap classes for styling
+
+    document.querySelector('.container').appendChild(backButton);
+
     backButton.addEventListener('click', function() {
         const state = JSON.parse(sessionStorage.getItem('movieListState'));
         if (state) {
