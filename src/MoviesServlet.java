@@ -77,6 +77,18 @@ public class MoviesServlet extends HttpServlet {
             }
 
 
+            if (genre != null && !genre.isEmpty()) {
+                conditions.add("g.name = '" + genre + "'");
+            }
+
+            if (titleStart != null && !titleStart.isEmpty()) {
+                if (titleStart.equals("*")) {
+                    conditions.add("m.title REGEXP '^[^a-zA-Z0-9]'");
+                } else {
+                    conditions.add("m.title LIKE '" + titleStart + "%'");
+                }
+            }
+
             String countQuery = "SELECT COUNT(DISTINCT m.id) as total FROM movies m " +
                     "JOIN ratings r ON m.id = r.movieId";
 
@@ -92,20 +104,6 @@ public class MoviesServlet extends HttpServlet {
             }
             countRs.close();
             countStatement.close();
-
-            if (genre != null && !genre.isEmpty()) {
-                conditions.add("g.name = '" + genre + "'");
-            }
-
-            if (titleStart != null && !titleStart.isEmpty()) {
-                if (titleStart.equals("*")) {
-                    conditions.add("m.title REGEXP '^[^a-zA-Z0-9]'");
-                } else {
-                    conditions.add("m.title LIKE '" + titleStart + "%'");
-                }
-            }
-
-
 
             String baseQuery = "SELECT DISTINCT m.id, m.title, m.year, m.director, r.rating, " +
                     "(SELECT GROUP_CONCAT(CONCAT(star_info.id, '::', star_info.name, '::', star_info.movie_count) " +
