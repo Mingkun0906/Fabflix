@@ -76,11 +76,6 @@ public class MoviesServlet extends HttpServlet {
                 conditions.add("s.name LIKE '%" + star + "%'");
             }
 
-
-            if (genre != null && !genre.isEmpty()) {
-                conditions.add("g.name = '" + genre + "'");
-            }
-
             if (titleStart != null && !titleStart.isEmpty()) {
                 if (titleStart.equals("*")) {
                     conditions.add("m.title REGEXP '^[^a-zA-Z0-9]'");
@@ -89,12 +84,20 @@ public class MoviesServlet extends HttpServlet {
                 }
             }
 
+            if (genre != null && !genre.isEmpty()) {
+                conditions.add("g.name = '" + genre + "'");
+            }
+
             String countQuery = "SELECT COUNT(DISTINCT m.id) as total FROM movies m " +
-                    "JOIN ratings r ON m.id = r.movieId";
+                    "JOIN ratings r ON m.id = r.movieId " +
+                    "LEFT JOIN genres_in_movies gim ON m.id = gim.movieId " +
+                    "LEFT JOIN genres g ON gim.genreId = g.id";
 
             if (!conditions.isEmpty()) {
                 countQuery += " WHERE " + String.join(" AND ", conditions);
             }
+
+
 
             Statement countStatement = conn.createStatement();
             ResultSet countRs = countStatement.executeQuery(countQuery);
@@ -104,6 +107,7 @@ public class MoviesServlet extends HttpServlet {
             }
             countRs.close();
             countStatement.close();
+
 
             String baseQuery = "SELECT DISTINCT m.id, m.title, m.year, m.director, r.rating, " +
                     "(SELECT GROUP_CONCAT(CONCAT(star_info.id, '::', star_info.name, '::', star_info.movie_count) " +
@@ -117,16 +121,16 @@ public class MoviesServlet extends HttpServlet {
                     "      ORDER BY movie_count DESC, s.name ASC " +
                     "      LIMIT 3) star_info) AS stars_info, " +
                     "(SELECT GROUP_CONCAT(g.name ORDER BY g.name ASC SEPARATOR ', ') " +
-                    "FROM (SELECT DISTINCT gim.genreId " +
-                    "      FROM genres_in_movies gim " +
-                    "      WHERE gim.movieId = m.id LIMIT 3) top_genres " +
-                    "JOIN genres g ON top_genres.genreId = g.id) AS genre_names " +
+                    "FROM genres g " +
+                    "JOIN genres_in_movies gim ON g.id = gim.genreId " +
+                    "WHERE gim.movieId = m.id) AS genre_names " +
                     "FROM movies m " +
                     "JOIN ratings r ON m.id = r.movieId " +
                     "LEFT JOIN stars_in_movies sim ON m.id = sim.movieId " +
                     "LEFT JOIN stars s ON sim.starId = s.id " +
                     "LEFT JOIN genres_in_movies gim ON m.id = gim.movieId " +
                     "LEFT JOIN genres g ON gim.genreId = g.id";
+
 
             if (!conditions.isEmpty()) {
                 baseQuery += " WHERE " + String.join(" AND ", conditions);
