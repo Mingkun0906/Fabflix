@@ -5,26 +5,66 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Movie List</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="movie-list.css">
 </head>
 <body>
 <div class="container">
     <h1>Movie List</h1>
+
+    <div class="items-per-page">
+        <label for="items-select">Movies per page:</label>
+        <select id="items-select" class="form-control">
+            <option value="10">10</option>
+            <option value="25">25</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+        </select>
+    </div>
+
     <div class="table-responsive">
         <table id="movie_table" class="table">
             <thead>
             <tr>
-                <th>Title</th>
+                <th class="sortable-header">
+                    Title
+                    <span class="sort-arrows">
+                        <i class="fas fa-arrow-up"></i>
+                        <i class="fas fa-arrow-down"></i>
+                    </span>
+                </th>
                 <th>Year</th>
                 <th>Director</th>
                 <th>Genres</th>
                 <th>Stars</th>
-                <th>Rating</th>
+                <th class="sortable-header">
+                    Rating
+                    <span class="sort-arrows">
+                        <i class="fas fa-arrow-up"></i>
+                        <i class="fas fa-arrow-down"></i>
+                    </span>
+                </th>
             </tr>
             </thead>
             <tbody id="movie_table_body">
             </tbody>
         </table>
+    </div>
+
+    <div class="pagination-controls">
+        <div class="pagination-info">
+            Showing <span id="start-index">1</span> to <span id="end-index">10</span> of <span id="total-items">100</span> movies
+        </div>
+        <div class="pagination-buttons">
+            <button id="prev-button" class="btn btn-nav" disabled>
+                <i class="fas fa-chevron-left"></i> Previous
+            </button>
+            <div class="page-numbers" id="page-numbers">
+            </div>
+            <button id="next-button" class="btn btn-nav">
+                Next <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
     </div>
 </div>
 
