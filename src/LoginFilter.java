@@ -26,8 +26,9 @@ public class LoginFilter implements Filter {
             chain.doFilter(request, response);
             return;
         }
-        if (requestURI.endsWith("login.html") || requestURI.endsWith("/login"))
-        {
+        if (requestURI.equals(contextPath + "/") ||
+                requestURI.endsWith("login.html") ||
+                requestURI.endsWith("/login")) {
             chain.doFilter(request, response);
             return;
         }
