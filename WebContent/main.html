@@ -9,10 +9,11 @@
 </head>
 <body>
 <div class="container mt-5">
-    <h1 class="text-center mb-5">Welcome to Fabflix</h1>
+    <h1 class="text-center mb-5 text-danger">Welcome to Fabflix</h1>
 
+    <!-- Search Container -->
     <div class="search-container mb-5">
-        <h2 class="text-center mb-4">Search Movies</h2>
+        <h2 class="text-center mb-4 text-danger">Search Movies</h2>
         <form id="search-form" class="row justify-content-center">
             <div class="col-md-3 mb-3">
                 <input type="text" class="form-control" id="title" placeholder="Title">
@@ -27,24 +28,25 @@
                 <input type="text" class="form-control" id="star" placeholder="Star's Name">
             </div>
             <div class="col-md-1 mb-3">
-                <button type="submit" class="btn btn-primary w-100">Search</button>
+                <button type="submit" class="btn btn-danger w-100">Search</button>
             </div>
         </form>
     </div>
 
+    <!-- Browse Container -->
     <div class="browse-container">
         <h2 class="text-center mb-4">Browse Movies</h2>
         <div class="row">
             <div class="col-md-6">
                 <h3 class="text-center mb-3">By Genre</h3>
                 <div id="genre-list" class="d-flex flex-wrap justify-content-center">
-                    <!-- Genre list will be inserted here by JavaScript -->
+                    <!-- Genre list will be dynamically generated here -->
                 </div>
             </div>
             <div class="col-md-6">
                 <h3 class="text-center mb-3">By Title</h3>
                 <div id="alphabet-list" class="d-flex flex-wrap justify-content-center">
-                    <!-- Alphabet list will be inserted here by JavaScript -->
+                    <!-- Alphabet list will be dynamically generated here -->
                 </div>
             </div>
         </div>

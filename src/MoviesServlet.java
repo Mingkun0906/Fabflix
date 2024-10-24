@@ -58,6 +58,8 @@ public class MoviesServlet extends HttpServlet {
             String year = request.getParameter("year");
             String director = request.getParameter("director");
             String star = request.getParameter("star");
+            String genre = request.getParameter("genre");
+            String titleStart = request.getParameter("title_start");
 
             List<String> conditions = new ArrayList<>();
 
@@ -74,6 +76,7 @@ public class MoviesServlet extends HttpServlet {
                 conditions.add("s.name LIKE '%" + star + "%'");
             }
 
+
             String countQuery = "SELECT COUNT(DISTINCT m.id) as total FROM movies m " +
                     "JOIN ratings r ON m.id = r.movieId";
 
@@ -89,6 +92,19 @@ public class MoviesServlet extends HttpServlet {
             }
             countRs.close();
             countStatement.close();
+
+            if (genre != null && !genre.isEmpty()) {
+                conditions.add("g.name = '" + genre + "'");
+            }
+
+            if (titleStart != null && !titleStart.isEmpty()) {
+                if (titleStart.equals("*")) {
+                    conditions.add("m.title REGEXP '^[^a-zA-Z0-9]'");
+                } else {
+                    conditions.add("m.title LIKE '" + titleStart + "%'");
+                }
+            }
+
 
 
             String baseQuery = "SELECT DISTINCT m.id, m.title, m.year, m.director, r.rating, " +
@@ -108,7 +124,11 @@ public class MoviesServlet extends HttpServlet {
                     "      WHERE gim.movieId = m.id LIMIT 3) top_genres " +
                     "JOIN genres g ON top_genres.genreId = g.id) AS genre_names " +
                     "FROM movies m " +
-                    "JOIN ratings r ON m.id = r.movieId";
+                    "JOIN ratings r ON m.id = r.movieId " +
+                    "LEFT JOIN stars_in_movies sim ON m.id = sim.movieId " +
+                    "LEFT JOIN stars s ON sim.starId = s.id " +
+                    "LEFT JOIN genres_in_movies gim ON m.id = gim.movieId " +
+                    "LEFT JOIN genres g ON gim.genreId = g.id";
 
             if (!conditions.isEmpty()) {
                 baseQuery += " WHERE " + String.join(" AND ", conditions);

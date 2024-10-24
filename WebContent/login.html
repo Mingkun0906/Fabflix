@@ -6,6 +6,12 @@
     <title>Fabflix Login</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="login.css">
+    <style>
+        .modal-body,
+        .modal-title {
+            color: #000000; /* Black text color */
+        }
+    </style>
 </head>
 <body>
 <div class="container">
@@ -39,5 +45,53 @@
         <button type="submit" class="btn btn-primary">Login</button>
     </form>
 </div>
+
+<!-- Bootstrap Modal -->
+<div class="modal fade" id="loginReminderModal" tabindex="-1" role="dialog" aria-labelledby="loginReminderLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="loginReminderLabel">Reminder</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Please log in to continue.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+<script>
+    // Check URL parameters for error messages or redirection
+    document.addEventListener('DOMContentLoaded', function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const error = urlParams.get('error');
+        const redirected = urlParams.get('redirected');
+
+        // Display appropriate error messages
+        if (error === 'invalid_credentials') {
+            document.getElementById('error-message').innerText = "Invalid email or password.";
+        } else if (error === 'empty_fields') {
+            document.getElementById('error-message').innerText = "Please fill in both fields.";
+        } else if (error === 'server_error') {
+            document.getElementById('error-message').innerText = "An internal error occurred. Please try again.";
+        }
+
+        // Show a Bootstrap modal if redirected
+        if (redirected === 'true') {
+            $('#loginReminderModal').modal('show');
+        }
+    });
+</script>
+
 </body>
 </html>

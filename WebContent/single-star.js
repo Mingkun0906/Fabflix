@@ -45,6 +45,7 @@ function handleResult(resultData) {
     let starInfoElement = jQuery("#star_info")
 
     let starName = resultData[0]["star_name"];
+    document.querySelector("h1").textContent = starName;
     let starDob = resultData[0]["star_dob"];
     starDob = (starDob === null) ? "N/A" : starDob;
 
@@ -74,9 +75,24 @@ function handleResult(resultData) {
     }
 }
 
-/**
- * Once this .js is loaded, following scripts will be executed by the browser\
- */
+document.addEventListener('DOMContentLoaded', function() {
+    // Add "Back to Movie List" button functionality
+    const backButton = document.createElement('button');
+    backButton.id = 'back-to-movie-list';
+    backButton.textContent = 'Back to Movie List';
+    backButton.classList.add('btn', 'btn-primary', 'mt-3'); // Add Bootstrap classes for styling
+
+    document.querySelector('.container').appendChild(backButton);
+
+    backButton.addEventListener('click', function() {
+        const state = JSON.parse(sessionStorage.getItem('movieListState'));
+        if (state) {
+            window.location.href = `movie-list.html?${state.searchParams}&page=${state.page}`;
+        } else {
+            window.location.href = 'movie-list.html';
+        }
+    });
+});
 
 // Get id from URL
 let starId = getParameterByName('id');

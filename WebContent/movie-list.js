@@ -8,6 +8,13 @@
  *      2. Populate the data to correct html elements.
  */
 
+function saveMovieListState() {
+    const state = {
+        searchParams: urlParams.toString(),
+        page: urlParams.get('page') || 1, // assuming there's a 'page' parameter
+    };
+    sessionStorage.setItem('movieListState', JSON.stringify(state));
+}
 
 /**
  * Handles the data returned by the API, read the jsonObject and populate data into html elements
@@ -15,6 +22,7 @@
  */
 function handleStarResult(resultData) {
     console.log("handleMovieResult: populating Movie table from resultData");
+
 
     totalItems = resultData[0].totalResults;
     updatePaginationInfo();
@@ -25,8 +33,8 @@ function handleStarResult(resultData) {
     console.log(resultData)
     for (let i = 1; i <= resultData.length; i++) {
         let rowHTML = "<tr>";
-        rowHTML += '<td><a href="single-movie.html?id=' + resultData[i]['movie_id'] + '">'
-            + resultData[i]["movie_title"] +     // Change "movie_name" to "movie_title"
+        rowHTML += '<td><a href="single-movie.html?id=' + resultData[i]['movie_id'] + '" onclick="saveMovieListState()">'
+            + resultData[i]["movie_title"] +
             '</a></td>';
         rowHTML += "<td>" + resultData[i]["movie_year"] + "</td>";
         rowHTML += "<td>" + resultData[i]["movie_director"] + "</td>";
@@ -41,20 +49,19 @@ function handleStarResult(resultData) {
         }
         rowHTML += "</td>";
 
-
         rowHTML += "<td>";
         if (resultData[i]["stars_info"]) {
             let stars = resultData[i]["stars_info"].split(', ');
             for (let j = 0; j < stars.length; j++) {
                 if (j > 0) rowHTML += ", ";
                 let [starId, starName] = stars[j].split('::');
-                rowHTML += '<a href="single-star.html?id=' + encodeURIComponent(starId) + '">' + starName + '</a>';
+                rowHTML += '<a href="single-star.html?id=' + encodeURIComponent(starId) + '" onclick="saveMovieListState()">' + starName + '</a>';
             }
         }
         rowHTML += "</td>";
-        rowHTML += "<td>" + resultData[i]["movie_rating"] + "</td>";
-        rowHTML += "</tr>";  // End of the row
 
+        rowHTML += "<td>" + resultData[i]["movie_rating"] + "</td>";
+        rowHTML += "</tr>";
 
         movieTableBodyElement.append(rowHTML);
     }
@@ -64,9 +71,13 @@ let currentPage = 1;
 let itemsPerPage = 10;
 let totalItems = 0;
 
+
 function updatePaginationInfo() {
     const startIndex = (currentPage - 1) * itemsPerPage + 1;
     const endIndex = Math.min(startIndex + itemsPerPage - 1, totalItems);
+
+//const urlParams = new URLSearchParams(window.location.search);
+
 
     $('#start-index').text(startIndex);
     $('#end-index').text(endIndex);
