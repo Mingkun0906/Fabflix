@@ -5,15 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fabflix - Main Page</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="main.css">
+    <style>
+        .logo {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 36px;
+            text-decoration: none;
+            color: red;
+            margin-left: 10px;
+        }
+        .logo:hover {
+            color: darkred;
+            text-decoration: none;
+        }
+    </style>
 </head>
 <body>
+<!-- Add Fabflix logo that refreshes the page -->
+<a href="main.html" class="logo">Fabflix</a>
+
 <div class="container mt-5">
-    <h1 class="text-center mb-5 text-danger">Welcome to Fabflix</h1>
+    <h1 class="text-center mb-5">Welcome to Fabflix</h1>
 
     <!-- Search Container -->
     <div class="search-container mb-5">
-        <h2 class="text-center mb-4 text-danger">Search Movies</h2>
+        <h2 class="text-center mb-4">Search Movies</h2>
         <form id="search-form" class="row justify-content-center">
             <div class="col-md-3 mb-3">
                 <input type="text" class="form-control" id="title" placeholder="Title">
