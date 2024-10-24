@@ -76,6 +76,23 @@ public class MoviesServlet extends HttpServlet {
                 conditions.add("s.name LIKE '%" + star + "%'");
             }
 
+
+            String countQuery = "SELECT COUNT(DISTINCT m.id) as total FROM movies m " +
+                    "JOIN ratings r ON m.id = r.movieId";
+
+            if (!conditions.isEmpty()) {
+                countQuery += " WHERE " + String.join(" AND ", conditions);
+            }
+
+            Statement countStatement = conn.createStatement();
+            ResultSet countRs = countStatement.executeQuery(countQuery);
+            int totalResults = 0;
+            if (countRs.next()) {
+                totalResults = countRs.getInt("total");
+            }
+            countRs.close();
+            countStatement.close();
+
             if (genre != null && !genre.isEmpty()) {
                 conditions.add("g.name = '" + genre + "'");
             }
@@ -89,12 +106,22 @@ public class MoviesServlet extends HttpServlet {
             }
 
 
+
             String baseQuery = "SELECT DISTINCT m.id, m.title, m.year, m.director, r.rating, " +
-                    "(SELECT GROUP_CONCAT(CONCAT(s2.id, '::', s2.name) ORDER BY s2.name ASC SEPARATOR ', ') " +
-                    "FROM (SELECT DISTINCT sim.starId FROM stars_in_movies sim WHERE sim.movieId = m.id LIMIT 3) top_stars " +
-                    "JOIN stars s2 ON top_stars.starId = s2.id) AS stars_info, " +
+                    "(SELECT GROUP_CONCAT(CONCAT(star_info.id, '::', star_info.name, '::', star_info.movie_count) " +
+                    "                    ORDER BY star_info.movie_count DESC, star_info.name ASC " +
+                    "                    SEPARATOR ', ') " +
+                    "FROM (SELECT DISTINCT s.id, s.name, " +
+                    "             (SELECT COUNT(*) FROM stars_in_movies WHERE starId = s.id) as movie_count " +
+                    "      FROM stars s " +
+                    "      JOIN stars_in_movies sim ON s.id = sim.starId " +
+                    "      WHERE sim.movieId = m.id " +
+                    "      ORDER BY movie_count DESC, s.name ASC " +
+                    "      LIMIT 3) star_info) AS stars_info, " +
                     "(SELECT GROUP_CONCAT(g.name ORDER BY g.name ASC SEPARATOR ', ') " +
-                    "FROM (SELECT DISTINCT gim.genreId FROM genres_in_movies gim WHERE gim.movieId = m.id LIMIT 3) top_genres " +
+                    "FROM (SELECT DISTINCT gim.genreId " +
+                    "      FROM genres_in_movies gim " +
+                    "      WHERE gim.movieId = m.id LIMIT 3) top_genres " +
                     "JOIN genres g ON top_genres.genreId = g.id) AS genre_names " +
                     "FROM movies m " +
                     "JOIN ratings r ON m.id = r.movieId " +
@@ -107,7 +134,30 @@ public class MoviesServlet extends HttpServlet {
                 baseQuery += " WHERE " + String.join(" AND ", conditions);
             }
 
-            baseQuery += " ORDER BY r.rating DESC LIMIT 20";
+            String sortParam = request.getParameter("sort");
+            if (sortParam == null) {
+                sortParam = "rating,desc,title,asc"; // default sort
+            }
+            String[] sortParts = sortParam.split(",");
+            String field1 = sortParts[0];
+            String order1 = sortParts[1].toUpperCase();
+            String field2 = sortParts[2];
+            String order2 = sortParts[3].toUpperCase();
+
+            baseQuery += " ORDER BY " +
+                    (field1.equals("rating") ? "r.rating" : "m.title") + " " + order1 + ", " +
+                    (field2.equals("rating") ? "r.rating" : "m.title") + " " + order2;
+
+            int page = 1;
+            int limit = 10;
+            try {
+                page = Integer.parseInt(request.getParameter("page"));
+                limit = Integer.parseInt(request.getParameter("limit"));
+            } catch (NumberFormatException e) {}
+            int offset = (page - 1) * limit;
+
+            baseQuery += String.format(" LIMIT %d OFFSET %d", limit, offset);
+
 
             Statement statement = conn.createStatement();
 
@@ -115,8 +165,10 @@ public class MoviesServlet extends HttpServlet {
             ResultSet rs = statement.executeQuery(baseQuery);
 
             JsonArray jsonArray = new JsonArray();
+            JsonObject responseObject = new JsonObject();
+            responseObject.addProperty("totalResults", totalResults);
+            jsonArray.add(responseObject);
 
-            // Iterate through each row of rs
             while (rs.next()) {
                 String movie_id = rs.getString("id");
                 String movie_title = rs.getString("title");
