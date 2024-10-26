@@ -1,0 +1,177 @@
+/* Reset and base styles */
+body {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    background-color: #141414;
+    color: #ffffff;
+    margin: 0;
+    padding: 20px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Header styles */
+h1 {
+    font-size: 3rem;
+    font-weight: bold;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+/* Navigation */
+.d-flex {
+    padding: 10px 0;
+}
+
+a {
+    text-decoration: none;
+    transition: color 0.3s ease;
+    color: #ffffff;
+}
+
+a:hover {
+    text-decoration: none;
+    color: #46d369;
+}
+
+/* Payment container */
+.payment-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Order summary styles */
+.order-summary {
+    background-color: #181818;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+}
+
+.order-summary h2 {
+    color: #e5e5e5;
+    margin-bottom: 15px;
+    font-size: 1.5rem;
+}
+
+.total-amount {
+    font-size: 24px;
+    color: #46d369;
+    font-weight: bold;
+}
+
+/* Payment form styles */
+.payment-form {
+    background-color: #181818;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #e5e5e5;
+    font-weight: bold;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #2c2c2c;
+    border-radius: 4px;
+    background-color: #202020;
+    color: #ffffff;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #46d369;
+}
+
+/* Form layout */
+.form-row {
+    display: flex;
+    gap: 20px;
+}
+
+.form-row .form-group {
+    flex: 1;
+}
+
+/* Submit button */
+.place-order-btn {
+    background-color: #46d369;
+    color: #000000;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 4px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    width: 100%;
+    transition: background-color 0.3s ease;
+}
+
+.place-order-btn:hover {
+    background-color: #3ab559;
+}
+
+/* Error message styles */
+.error-message {
+    color: #ff5555;
+    margin-top: 5px;
+    font-size: 14px;
+    display: none;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    .payment-container {
+        padding: 10px;
+    }
+
+    .form-row {
+        flex-direction: column;
+        gap: 0;
+    }
+
+    .payment-form {
+        padding: 20px;
+    }
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #141414;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #686868;
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #b3b3b3;
+}

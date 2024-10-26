@@ -91,7 +91,9 @@ public class MoviesServlet extends HttpServlet {
             String countQuery = "SELECT COUNT(DISTINCT m.id) as total FROM movies m " +
                     "JOIN ratings r ON m.id = r.movieId " +
                     "LEFT JOIN genres_in_movies gim ON m.id = gim.movieId " +
-                    "LEFT JOIN genres g ON gim.genreId = g.id";
+                    "LEFT JOIN genres g ON gim.genreId = g.id " +
+                    "LEFT JOIN stars_in_movies sim ON m.id = sim.movieId " +
+                    "LEFT JOIN stars s ON sim.starId = s.id";
 
             if (!conditions.isEmpty()) {
                 countQuery += " WHERE " + String.join(" AND ", conditions);

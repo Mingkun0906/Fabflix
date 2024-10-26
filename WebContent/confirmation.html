@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmation - Fabflix</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="confirmation.css">
+</head>
+<body>
+<div class="container">
+    <div class="d-flex justify-content-end">
+        <a href="main.html" class="small">Return to Main Page</a>
+    </div>
+
+    <h1>Order Confirmation</h1>
+
+    <div class="confirmation-container">
+        <div class="success-message">
+            Your order has been successfully placed!
+        </div>
+
+        <div class="order-details">
+            <div class="order-section">
+                <h2>Order Information</h2>
+                <table class="order-table">
+                    <tr>
+                        <th>Order Date:</th>
+                        <td id="order-date"></td>
+                    </tr>
+                    <tr>
+                        <th>Order ID:</th>
+                        <td id="order-id"></td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="order-section">
+                <h2>Purchased Items</h2>
+                <table class="order-table">
+                    <thead>
+                    <tr>
+                        <th>Movie Title</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                        <th>Subtotal</th>
+                    </tr>
+                    </thead>
+                    <tbody id="order-items">
+                    <!-- Items will be populated by JavaScript -->
+                    </tbody>
+                </table>
+
+                <div class="total-price">
+                    Total: $<span id="order-total">0.00</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="confirmation.js"></script>
+</body>
+</html>
