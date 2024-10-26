@@ -62,10 +62,27 @@ function handleStarResult(resultData) {
 
         rowHTML += "<td>" + resultData[i]["movie_rating"] + "</td>";
         rowHTML += "</tr>";
+        rowHTML += `<td><button class="btn btn-sm btn-primary add-to-cart" data-id="${resultData[i]['movie_id']}">Add to Cart</button></td>`;
+        rowHTML += "</tr>";
 
         movieTableBodyElement.append(rowHTML);
     }
 }
+
+$('#movie_table_body').on('click', '.add-to-cart', function() {
+    const movie_id = $(this).data('movie_id');
+    $.ajax({
+        url: 'api/cart',
+        method: 'POST',
+        data: { movie_id: movie_id, quantity: 1 },
+        success: function() {
+            alert('Movie added to cart successfully!');
+        },
+        error: function() {
+            alert('Failed to add movie to cart.');
+        }
+    });
+});
 
 let currentPage = 1;
 let itemsPerPage = 10;

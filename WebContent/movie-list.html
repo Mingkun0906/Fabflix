@@ -6,26 +6,9 @@
     <title>Movie List</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <!-- Add Google Fonts link for Bebas Neue -->
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="movie-list.css">
-    <style>
-        .logo {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 36px;
-            text-decoration: none;
-            color: red;
-            margin-left: 10px;
-        }
-        .logo:hover {
-            color: darkred;
-            text-decoration: none;
-        }
-    </style>
 </head>
 <body>
-<a href="http://localhost:8080/cs122b_project1_api_example_war/main.html" class="logo">FabFlix</a>
-<!-- Replace /main-page-url with the actual URL of the main page -->
 <div class="container">
     <h1>Movie List</h1>
 
@@ -84,6 +67,12 @@
         </div>
     </div>
 </div>
+
+<script>
+    $('#checkout-button').click(function() {
+        window.location.href = 'shopping-cart.html';
+    });
+</script>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
