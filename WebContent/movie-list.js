@@ -81,7 +81,6 @@ function handleStarResult(resultData) {
 }
 
 function addToCart(movieId, title, price, quantity) {
-    // Send an AJAX request to add the movie to the cart
     $.ajax({
         url: 'api/cart',
         method: 'POST',
@@ -89,13 +88,15 @@ function addToCart(movieId, title, price, quantity) {
             id: movieId,
             title: title,
             price: price,
-            quantity: quantity
+            quantity: quantity,
+            source: 'movie_list' // Set source to 'movie_list'
         },
         success: function(response) {
-            alert('Movie added to cart!');
+            // Display success message (e.g., temporary toast)
+            showTemporaryMessage('Movie added to cart!');
         },
         error: function() {
-            alert('Failed to add movie to cart!');
+            showTemporaryMessage('Failed to add movie to cart!');
         }
     });
 }

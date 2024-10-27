@@ -34,27 +34,43 @@ public class ShoppingCartServlet extends HttpServlet {
 
             String movie_id = request.getParameter("id");
             int quantityChange = Integer.parseInt(request.getParameter("quantity"));
+            String source = request.getParameter("source"); // New parameter
 
-            if (cart.containsKey(movie_id)) {
-                JsonObject movie = cart.get(movie_id);
-                int newQuantity = quantityChange; // Set newQuantity to the incoming quantity directly
+            if (quantityChange == 0) {
+                // If quantity is 0, remove the movie from the cart
+                cart.remove(movie_id);
+            } else {
+                if (cart.containsKey(movie_id)) {
+                    JsonObject movie = cart.get(movie_id);
+                    int currentQuantity = movie.get("quantity").getAsInt();
+                    int newQuantity;
 
-                if (newQuantity > 0) {
-                    movie.addProperty("quantity", newQuantity);
-                } else {
-                    cart.remove(movie_id); // Remove item if quantity drops to 0
+                    // If request is from shopping cart page, set quantity directly
+                    if ("shopping_cart".equals(source)) {
+                        newQuantity = quantityChange;
+                    } else {
+                        // Otherwise, increment the quantity
+                        newQuantity = currentQuantity + quantityChange;
+                    }
+
+                    if (newQuantity > 0) {
+                        movie.addProperty("quantity", newQuantity);
+                        cart.put(movie_id, movie);
+                    } else {
+                        cart.remove(movie_id); // Remove item if quantity drops to 0
+                    }
+                } else if (quantityChange > 0) {
+                    // Add a new item to the cart from the movie list or single movie page
+                    String movie_title = request.getParameter("title");
+                    int price = Integer.parseInt(request.getParameter("price"));
+
+                    JsonObject movie = new JsonObject();
+                    movie.addProperty("movie_id", movie_id);
+                    movie.addProperty("movie_title", movie_title);
+                    movie.addProperty("price", price);
+                    movie.addProperty("quantity", quantityChange);
+                    cart.put(movie_id, movie);
                 }
-            } else if (quantityChange > 0) {
-                // If the item is new and has a positive quantity, add it to the cart
-                String movie_title = request.getParameter("title");
-                int price = Integer.parseInt(request.getParameter("price"));
-
-                JsonObject movie = new JsonObject();
-                movie.addProperty("movie_id", movie_id);
-                movie.addProperty("movie_title", movie_title);
-                movie.addProperty("price", price);
-                movie.addProperty("quantity", quantityChange);
-                cart.put(movie_id, movie);
             }
 
             JsonArray cartArray = new JsonArray();
@@ -72,6 +88,7 @@ public class ShoppingCartServlet extends HttpServlet {
             out.close();
         }
     }
+
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

@@ -56,36 +56,29 @@ $(document).ready(function() {
         $('#total-price').text(`Total: $${totalPrice.toFixed(2)}`);
     }
 
-    // Modify quantity
     $('#cart-items').on('change', '.quantity-input', function() {
         const movieId = $(this).data('id');
         const newQuantity = parseInt($(this).val());
-        const price = parseFloat($(this).data('price'));
-        const title = $(this).data('title');
 
         if (newQuantity > 0) {
-            // Update the cart in the backend with the new quantity
             $.ajax({
                 url: 'api/cart',
                 method: 'POST',
                 data: {
                     id: movieId,
-                    title: title,
-                    price: price,
-                    quantity: newQuantity // Send the new quantity directly
+                    quantity: newQuantity,
+                    source: 'shopping_cart' // Set source to 'shopping_cart'
                 },
                 success: function(cart) {
-                    displayCart(cart); // Refresh cart display
+                    displayCart(cart); // Refresh the cart to reflect the change
                 },
-                error: function(xhr, status, error) {
-                    console.log('Update cart error:', error);
-                    loadCart();  // Reload the cart from server
+                error: function() {
+                    showTemporaryMessage('Failed to update cart!');
                 }
             });
         } else {
             alert('Quantity must be at least 1');
             $(this).val(1);
-            calculateCartTotal();
         }
     });
 
@@ -105,11 +98,11 @@ $(document).ready(function() {
                 quantity: 0  // Set to 0 to remove
             },
             success: function(cart) {
-                displayCart(cart);
+                displayCart(cart); // Refresh the cart to reflect the removal
             },
             error: function(xhr, status, error) {
                 console.log('Remove item error:', error);
-                alert('Failed to remove movie from cart');
+                showTemporaryMessage('Failed to remove movie from cart');
             }
         });
     });

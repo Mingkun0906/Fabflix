@@ -96,13 +96,14 @@ $(document).on('click', '#add-to-cart', function() {
             id: movieId,
             title: title,
             price: price,
-            quantity: quantity
+            quantity: quantity,
+            source: 'single_movie' // Set source to 'single_movie'
         },
         success: function() {
-            alert('Movie added to cart!');
+            showTemporaryMessage('Movie added to cart!');
         },
         error: function() {
-            alert('Failed to add movie to cart!');
+            showTemporaryMessage('Failed to add movie to cart!');
         }
     });
 });
