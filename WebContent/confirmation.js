@@ -1,11 +1,4 @@
-function formatDate(dateStr) {
-    const options = {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-    };
-    return new Date(dateStr).toLocaleDateString('en-US', options);
-}
+
 
 /**
  * Calculates total amount from cart items
@@ -23,7 +16,7 @@ function calculateTotal(items) {
  * @param orderData Order information from the server
  */
 function populateOrderDetails(orderData) {
-    $('#order-date').text(formatDate(orderData.orderDate));
+    $('#order-date').text(orderData.orderDate);
     $('#order-id').text(`Sale #${orderData.orderId}`);
     $('#order-items').empty();
 
