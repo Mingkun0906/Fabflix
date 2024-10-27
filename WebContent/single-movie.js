@@ -62,6 +62,8 @@ function handleResult(resultData) {
         `<a href="movie-list.html?genre=${encodeURIComponent(genre.trim())}" class="genre-link">${genre.trim()}</a>`
     ).join(', ');
 
+    const starsHTML = formatStars(resultData[0]["movie_stars"]);
+
     document.title = movieTitle;
     jQuery("h1").text(movieTitle);
 
@@ -70,6 +72,7 @@ function handleResult(resultData) {
         <p><strong>Title:</strong> ${movieTitle}</p>
         <p><strong>Year Released:</strong> ${resultData[0]["movie_year"]}</p>
         <p><strong>Director:</strong> ${resultData[0]["movie_director"]}</p>
+        <p><strong>Stars:</strong> ${starsHTML}</p>
         <p><strong>Rating:</strong> ${resultData[0]["movie_rating"]}</p>
         <p><strong>Genres:</strong> ${genresHTML}</p>
         <p><strong>Price:</strong> $${moviePrice.toFixed(2)}</p>

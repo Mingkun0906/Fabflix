@@ -52,4 +52,11 @@ document.addEventListener('DOMContentLoaded', function() {
         letterLink.classList.add('alphabet-link', 'm-2'); // Add margin for spacing
         alphabetListElement.appendChild(letterLink);
     });
+
+    const checkoutButton = document.getElementById('checkout-button');
+    if (checkoutButton) {
+        checkoutButton.addEventListener('click', function() {
+            window.location.href = 'shopping-cart.html';
+        });
+    }
 });
