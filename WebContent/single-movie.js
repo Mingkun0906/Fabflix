@@ -50,29 +50,63 @@ function formatStars(starsString) {
  */
 
 function handleResult(resultData) {
-
     console.log("handleResult: populating movie info from resultData");
 
-    let movieTitle = resultData[0]["movie_title"];
-    document.querySelector("h1").textContent = movieTitle;
     let movieInfoElement = jQuery("#movie_info");
+
+    // Extracting movie details
+    const movieTitle = resultData[0]["movie_title"];
+    const moviePrice = resultData[0]["movie_price"];
     const genresArray = resultData[0]["movie_genres"].split(',');
     const genresHTML = genresArray.map(genre =>
         `<a href="movie-list.html?genre=${encodeURIComponent(genre.trim())}" class="genre-link">${genre.trim()}</a>`
     ).join(', ');
 
-    // append two html <p> created to the h3 body, which will refresh the page
+    // Populate movie info
     movieInfoElement.append(`
-        <p><strong>Title:</strong> ${resultData[0]["movie_title"]}</p>
+        <p><strong>Title:</strong> ${movieTitle}</p>
         <p><strong>Year Released:</strong> ${resultData[0]["movie_year"]}</p>
         <p><strong>Director:</strong> ${resultData[0]["movie_director"]}</p>
         <p><strong>Rating:</strong> ${resultData[0]["movie_rating"]}</p>
         <p><strong>Genres:</strong> ${genresHTML}</p>
-        <p><strong>Stars:</strong> ${formatStars(resultData[0]["movie_stars"])}</p>
+        <p><strong>Price:</strong> $${moviePrice.toFixed(2)}</p>
+        <button id="add-to-cart" class="btn btn-success mt-3" 
+            data-id="${resultData[0]['movie_id']}" 
+            data-title="${movieTitle}" 
+            data-price="${moviePrice}">
+            Add to Cart
+        </button>
+        <button id="checkout" class="btn btn-primary mt-3">Checkout</button>
     `);
-
-    console.log("handleResult: populating movie table from resultData");
 }
+
+$(document).on('click', '#add-to-cart', function() {
+    const movieId = $(this).data('id');
+    const title = $(this).data('title');
+    const price = $(this).data('price');
+    const quantity = 1;
+
+    $.ajax({
+        url: 'api/cart',
+        method: 'POST',
+        data: {
+            id: movieId,
+            title: title,
+            price: price,
+            quantity: quantity
+        },
+        success: function() {
+            alert('Movie added to cart!');
+        },
+        error: function() {
+            alert('Failed to add movie to cart!');
+        }
+    });
+});
+
+$(document).on('click', '#checkout', function() {
+    window.location.href = 'shopping-cart.html';
+});
 
 document.addEventListener('DOMContentLoaded', function() {
     // Add "Back to Movie List" button functionality
