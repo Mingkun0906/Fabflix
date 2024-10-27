@@ -27,8 +27,6 @@ function handleStarResult(resultData) {
 
     let movieTableBodyElement = jQuery("#movie_table_body");
     movieTableBodyElement.empty();
-    console.log(resultData.length)
-    console.log(resultData)
     for (let i = 1; i < resultData.length; i++) {
         let rowHTML = "<tr>";
         rowHTML += '<td><a href="single-movie.html?id=' + resultData[i]['movie_id'] + '" onclick="saveMovieListState()">'
