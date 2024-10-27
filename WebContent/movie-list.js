@@ -175,6 +175,7 @@ $(document).ready(function() {
     });
 
     fetchMovies();
+    saveMovieListState();
 });
 
 jQuery(document).ready(function() {

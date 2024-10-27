@@ -1,5 +1,16 @@
 $(document).ready(function() {
     loadCart();
+    $('#back-to-movie-list').click(function() {
+        // Retrieve the saved state from sessionStorage
+        const state = JSON.parse(sessionStorage.getItem('movieListState'));
+        if (state && state.searchParams) {
+            // Redirect to the saved movie list page with search parameters
+            window.location.href = `movie-list.html?${state.searchParams}&page=${state.page}`;
+        } else {
+            // If no state is found, go to the main movie list page
+            window.location.href = 'movie-list.html';
+        }
+    });
 
     function loadCart() {
         $.ajax({
@@ -14,16 +25,6 @@ $(document).ready(function() {
         });
     }
 
-    function calculateCartTotal() {
-        let totalPrice = 0;
-        $('.quantity-input').each(function() {
-            const quantity = parseInt($(this).val());
-            const price = parseFloat($(this).data('price'));
-            totalPrice += quantity * price;
-        });
-        $('#total-price').text(`Total: $${totalPrice.toFixed(2)}`);
-    }
-
     function displayCart(cart) {
         let cartTable = $('#cart-items');
         cartTable.empty();
@@ -36,7 +37,7 @@ $(document).ready(function() {
             // Use item.movie_title to display the title
             cartTable.append(`
             <tr>
-                <td>${item.movie_title}</td> <!-- Display the movie title -->
+                <td>${item.movie_title}</td>
                 <td>
                     <input type="number" class="form-control quantity-input" 
                            value="${item.quantity}" 
@@ -67,10 +68,10 @@ $(document).ready(function() {
                 data: {
                     id: movieId,
                     quantity: newQuantity,
-                    source: 'shopping_cart' // Set source to 'shopping_cart'
+                    source: 'shopping_cart'
                 },
                 success: function(cart) {
-                    displayCart(cart); // Refresh the cart to reflect the change
+                    displayCart(cart);
                 },
                 error: function() {
                     showTemporaryMessage('Failed to update cart!');
@@ -93,12 +94,12 @@ $(document).ready(function() {
             method: 'POST',
             data: {
                 id: movieId,
-                title: title, // Ensure title is sent
+                title: title,
                 price: price,
-                quantity: 0  // Set to 0 to remove
+                quantity: 0
             },
             success: function(cart) {
-                displayCart(cart); // Refresh the cart to reflect the removal
+                displayCart(cart);
             },
             error: function(xhr, status, error) {
                 console.log('Remove item error:', error);

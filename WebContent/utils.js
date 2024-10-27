@@ -1,8 +1,7 @@
 function showTemporaryMessage(message) {
-    // Create a div element for the message
+
     const messageDiv = $('<div></div>').text(message).addClass('temporary-message');
 
-    // Style the message div
     messageDiv.css({
         position: 'fixed',
         top: '20%',
@@ -18,10 +17,8 @@ function showTemporaryMessage(message) {
         textAlign: 'center'
     });
 
-    // Add the message div to the body
     $('body').append(messageDiv);
 
-    // Set a timeout to remove the message after 1 second
     setTimeout(function() {
         messageDiv.fadeOut(300, function() {
             $(this).remove();
