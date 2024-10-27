@@ -61,7 +61,8 @@ public class LoginServlet extends HttpServlet {
                 // Successful login, create session
                 HttpSession session = request.getSession();
                 session.setAttribute("user", email);
-
+                int userId = rs.getInt("id");
+                session.setAttribute("user_id", userId);
                 // Redirect to the main page after successful login
                 response.sendRedirect("main.html");
             } else {
