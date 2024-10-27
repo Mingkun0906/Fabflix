@@ -36,13 +36,13 @@ public class PaymentServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
 
         try (Connection conn = dataSource.getConnection()) {
-            String creditCard = request.getParameter("creditCard");
+            String creditCard = request.getParameter("creditCard").replaceAll("\\s", "");
             String firstName = request.getParameter("firstName");
             String lastName = request.getParameter("lastName");
             int expirationMonth = Integer.parseInt(request.getParameter("expirationMonth"));
             int expirationYear = Integer.parseInt(request.getParameter("expirationYear"));
 
-            String query = "SELECT * FROM creditcards WHERE id = ? AND firstName = ? AND lastName = ? " +
+            String query = "SELECT * FROM creditcards WHERE REPLACE(id, ' ', '') = ? AND firstName = ? AND lastName = ? " +
                     "AND YEAR(expiration) = ? AND MONTH(expiration) = ?";
 
             PreparedStatement statement = conn.prepareStatement(query);
