@@ -42,7 +42,8 @@ function handleStarResult(resultData) {
             let genres = resultData[i]["movie_genres"].split(', ');
             for (let j = 0; j < genres.length; j++) {
                 if (j > 0) rowHTML += ", ";
-                rowHTML += genres[j];
+                let genre = genres[j].trim();
+                rowHTML += '<a href="movie-list.html?genre=' + encodeURIComponent(genre) + '" onclick="saveMovieListState()">' + genre + '</a>'
             }
         }
         rowHTML += "</td>";
