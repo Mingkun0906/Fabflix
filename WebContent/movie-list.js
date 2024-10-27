@@ -146,6 +146,7 @@ function fetchMovies() {
 }
 
 $(document).ready(function() {
+    updateHeaderWithGenre();
     const urlParams = new URLSearchParams(window.location.search);
     currentPage = parseInt(urlParams.get('page')) || 1;
     itemsPerPage = parseInt(urlParams.get('limit')) || 10;
@@ -221,6 +222,46 @@ function updateSortVisuals() {
 
 function capitalize(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+function updateHeaderWithGenre() {
+    const genre = getParameterByName('genre');
+    const title_start = getParameterByName('title_start');
+    const star = getParameterByName('star');
+    const title = getParameterByName('title');
+    const year = getParameterByName('year');
+    const director = getParameterByName('director');
+    if (genre) {
+        jQuery("h1").text(`Genre: ${genre}`);
+    }
+    else if (title_start)
+    {
+        jQuery("h1").text(`Movie title start at: ${title_start}`);
+    }
+    else if (star || title || year || director)
+    {
+        jQuery("h1").text(`Search result:`);
+    }
+    else
+    {
+        jQuery("h1").text("Movie List");
+    }
+}
+
+function getParameterByName(target) {
+    // Get request URL
+    let url = window.location.href;
+    // Encode target parameter name to URL encoding
+    target = target.replace(/[\[\]]/g, "\\$&");
+
+    // Use regular expression to find matched parameter value
+    let regex = new RegExp("[?&]" + target + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+
+    // Return the decoded parameter value
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
 let apiUrl = "api/movies";
