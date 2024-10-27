@@ -10,11 +10,14 @@
 
 function saveMovieListState() {
     const state = {
-        searchParams: urlParams.toString(),
-        page: urlParams.get('page') || 1, // assuming there's a 'page' parameter
+        searchParams: new URLSearchParams(window.location.search).toString(),
+        page: currentPage,
+        limit: itemsPerPage,
+        sort: urlParams.get('sort') || 'rating,desc,title,asc' // Default sorting
     };
     sessionStorage.setItem('movieListState', JSON.stringify(state));
 }
+
 
 /**
  * Handles the data returned by the API, read the jsonObject and populate data into html elements
@@ -146,6 +149,16 @@ function fetchMovies() {
 }
 
 $(document).ready(function() {
+    const savedState = JSON.parse(sessionStorage.getItem('movieListState'));
+    if (savedState) {
+        // Apply saved parameters to URL
+        const urlParams = new URLSearchParams(savedState.searchParams);
+        currentPage = parseInt(savedState.page) || 1;
+        itemsPerPage = parseInt(savedState.limit) || 10;
+        fetchMovies(); // Fetch movies with saved state
+    } else {
+        fetchMovies(); // Fetch movies with default state
+    }
     updateHeaderWithGenre();
     const urlParams = new URLSearchParams(window.location.search);
     currentPage = parseInt(urlParams.get('page')) || 1;

@@ -125,9 +125,9 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelector('.container').appendChild(backButton);
 
     backButton.addEventListener('click', function() {
-        const state = JSON.parse(sessionStorage.getItem('movieListState'));
-        if (state) {
-            window.location.href = `movie-list.html?${state.searchParams}&page=${state.page}`;
+        const savedState = JSON.parse(sessionStorage.getItem('movieListState'));
+        if (savedState) {
+            window.location.href = `movie-list.html?${savedState.searchParams}&page=${savedState.page}&limit=${savedState.limit}&sort=${savedState.sort}`;
         } else {
             window.location.href = 'movie-list.html';
         }
