@@ -62,6 +62,9 @@ function handleResult(resultData) {
         `<a href="movie-list.html?genre=${encodeURIComponent(genre.trim())}" class="genre-link">${genre.trim()}</a>`
     ).join(', ');
 
+    document.title = movieTitle;
+    jQuery("h1").text(movieTitle);
+
     // Populate movie info
     movieInfoElement.append(`
         <p><strong>Title:</strong> ${movieTitle}</p>

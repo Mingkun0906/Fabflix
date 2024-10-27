@@ -1,13 +1,29 @@
 
 
-function getCartTotal() {
-    return  10.00;
+function getCartTotal(callback) {
+    $.ajax({
+        url: 'api/cart',
+        method: 'GET',
+        success: function(cart) {
+            let totalPrice = 0;
+            // Loop through each item in the cart and calculate the total price
+            cart.forEach(item => {
+                totalPrice += item.price * item.quantity;
+            });
+            callback(totalPrice);
+        },
+        error: function(xhr, status, error) {
+            console.error('Error fetching cart:', error);
+            callback(0); // Set total to 0 if there's an error
+        }
+    });
 }
 
 // Update the displayed total
 function updateCartTotal() {
-    const total = getCartTotal();
-    document.getElementById('cart-total').textContent = parseFloat(total).toFixed(2);
+    getCartTotal(function(total) {
+        document.getElementById('cart-total').textContent = total.toFixed(2);
+    });
 }
 
 // Handle form submission
