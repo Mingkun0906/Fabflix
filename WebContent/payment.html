@@ -10,7 +10,7 @@
 <body>
 <div class="container">
     <div class="d-flex justify-content-end">
-        <a href="cart.html" class="small">Back to Cart</a>
+        <a href="shopping-cart.html" class="small">Back to Cart</a>
     </div>
 
     <h1>Payment Information</h1>
@@ -41,8 +41,8 @@
             <div class="form-group">
                 <label for="creditCard">Credit Card Number</label>
                 <input type="text" id="creditCard" name="creditCard"
-                       maxlength="16" required
-                       pattern="\d+"
+                       maxlength="20" required
+                       pattern="[\d\s]+"
                        title="Please enter a valid credit card number">
                 <div class="error-message" id="creditCard-error"></div>
             </div>
