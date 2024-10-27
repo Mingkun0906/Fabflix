@@ -78,7 +78,6 @@ h1 {
 
 .table td:last-child {
     font-weight: bold;
-    color: #46d369;
 }
 
 /* Responsive adjustments */
@@ -228,8 +227,8 @@ h1 {
 
 .items-per-page select:focus {
     outline: none;
-    border-color: #46d369;
-    box-shadow: 0 0 0 2px rgba(70, 211, 105, 0.25);
+    border-color: antiquewhite;
+    box-shadow: 0 0 0 2px rgb(61, 73, 92);
 }
 
 
@@ -267,8 +266,8 @@ h1 {
 
 .btn-nav:not(:disabled):hover {
     background-color: #282828;
-    border-color: #46d369;
-    color: #46d369;
+    border-color: antiquewhite;
+    color: antiquewhite;
 }
 
 .btn-nav:disabled {
@@ -298,15 +297,15 @@ h1 {
 }
 
 .page-number:hover {
-    background-color: #282828;
-    border-color: #46d369;
-    color: #46d369;
+    background-color: antiquewhite;
+    border-color: antiquewhite;
+    color: antiquewhite;
 }
 
 .page-number.active {
-    background-color: #46d369;
-    border-color: #46d369;
-    color: #141414;
+    background-color: antiquewhite;
+    border-color: antiquewhite;
+    color: antiquewhite;
     font-weight: bold;
 }
 
