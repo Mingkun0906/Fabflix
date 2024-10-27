@@ -111,7 +111,7 @@ public class MoviesServlet extends HttpServlet {
             countStatement.close();
 
 
-            String baseQuery = "SELECT DISTINCT m.id, m.title, m.year, m.director, r.rating, " +
+            String baseQuery = "SELECT DISTINCT m.id, m.title, m.year, m.director, r.rating, m.price, " +
                     "(SELECT GROUP_CONCAT(CONCAT(star_info.id, '::', star_info.name, '::', star_info.movie_count) " +
                     "                    ORDER BY star_info.movie_count DESC, star_info.name ASC " +
                     "                    SEPARATOR ', ') " +
@@ -180,6 +180,7 @@ public class MoviesServlet extends HttpServlet {
                 String movie_director = rs.getString("director");
                 String movie_genres = rs.getString("genre_names");
                 String movie_rating = rs.getString("rating");
+                String movie_price = rs.getString("price");
                 String stars_info = rs.getString("stars_info");
 
                 // Create a JsonObject based on the data we retrieve from rs
@@ -189,6 +190,7 @@ public class MoviesServlet extends HttpServlet {
                 jsonObject.addProperty("movie_year", movie_year);
                 jsonObject.addProperty("movie_director", movie_director);
                 jsonObject.addProperty("movie_rating", movie_rating);
+                jsonObject.addProperty("price", movie_price);
                 jsonObject.addProperty("stars_info", stars_info);
                 jsonObject.addProperty("movie_genres", movie_genres);
 

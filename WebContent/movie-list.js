@@ -22,8 +22,6 @@ function saveMovieListState() {
  */
 function handleStarResult(resultData) {
     console.log("handleMovieResult: populating Movie table from resultData");
-
-
     totalItems = resultData[0].totalResults;
     updatePaginationInfo();
 
@@ -31,7 +29,7 @@ function handleStarResult(resultData) {
     movieTableBodyElement.empty();
     console.log(resultData.length)
     console.log(resultData)
-    for (let i = 1; i <= resultData.length; i++) {
+    for (let i = 1; i < resultData.length; i++) {
         let rowHTML = "<tr>";
         rowHTML += '<td><a href="single-movie.html?id=' + resultData[i]['movie_id'] + '" onclick="saveMovieListState()">'
             + resultData[i]["movie_title"] +
@@ -61,10 +59,45 @@ function handleStarResult(resultData) {
         rowHTML += "</td>";
 
         rowHTML += "<td>" + resultData[i]["movie_rating"] + "</td>";
+        rowHTML += "<td>$" + resultData[i]["price"] + "</td>"; // Display price
+        rowHTML += `<td><button class="btn btn-sm btn-primary add-to-cart" 
+                      data-id="${resultData[i]['movie_id']}" 
+                      data-title="${resultData[i]['movie_title']}" 
+                      data-price="${resultData[i]['price']}">Add to Cart</button></td>`;
         rowHTML += "</tr>";
 
         movieTableBodyElement.append(rowHTML);
     }
+
+    // Add click handler for "Add to Cart" buttons
+    $('.add-to-cart').on('click', function() {
+        const movieId = $(this).data('id');
+        const title = $(this).data('title');
+        const price = $(this).data('price');
+        const quantity = 1; // Set the quantity to 1 for initial addition
+
+        addToCart(movieId, title, price, quantity);
+    });
+}
+
+function addToCart(movieId, title, price, quantity) {
+    // Send an AJAX request to add the movie to the cart
+    $.ajax({
+        url: 'api/cart',
+        method: 'POST',
+        data: {
+            id: movieId,
+            title: title,
+            price: price,
+            quantity: quantity
+        },
+        success: function(response) {
+            alert('Movie added to cart!');
+        },
+        error: function() {
+            alert('Failed to add movie to cart!');
+        }
+    });
 }
 
 let currentPage = 1;
