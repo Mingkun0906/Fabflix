@@ -4,7 +4,8 @@ This is a movie web application that allows users to view a list of movies and c
 detailed information, including the top stars and genres for each movie.
 
 ## Video url
-- https://youtu.be/ahCbn9ZfatM
+- https://youtu.be/ahCbn9ZfatM (proj1)
+- https://youtu.be/XPMR9KZYtgU (proj2)
 
 
 ## Contributions
