@@ -57,11 +57,9 @@ public class ConfirmationServlet extends HttpServlet {
                 responseObj.addProperty("customerEmail", userEmail);
                 JsonArray items = new JsonArray();
 
-                // First get a sale ID by inserting one record
                 String insertFirstSql = "INSERT INTO sales (customerId, movieId, saleDate, quantity) VALUES (?, ?, ?, ?)";
                 PreparedStatement firstPs = conn.prepareStatement(insertFirstSql, Statement.RETURN_GENERATED_KEYS);
 
-                // Get first item from cart to create initial record
                 JsonObject firstItem = cart.values().iterator().next();
                 String firstMovieId = firstItem.get("movie_id").getAsString();
                 int firstQuantity = firstItem.get("quantity").getAsInt();
@@ -72,7 +70,6 @@ public class ConfirmationServlet extends HttpServlet {
                 firstPs.setInt(4, firstQuantity);
                 firstPs.executeUpdate();
 
-                // Get the generated ID that we'll use for all items in this order
                 Integer saleId = null;
                 ResultSet rs = firstPs.getGeneratedKeys();
                 if (rs.next()) {
@@ -94,7 +91,7 @@ public class ConfirmationServlet extends HttpServlet {
                     String movieId = item.get("movie_id").getAsString();
                     int quantity = item.get("quantity").getAsInt();
 
-                    restPs.setInt(1, saleId);  // Use the same sale ID for all items
+                    restPs.setInt(1, saleId);
                     restPs.setInt(2, userId);
                     restPs.setString(3, movieId);
                     restPs.setDate(4, saleDate);

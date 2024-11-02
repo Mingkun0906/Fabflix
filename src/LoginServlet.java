@@ -20,8 +20,6 @@ import jakarta.servlet.http.HttpSession;
 // Declaring a WebServlet called FormServlet, which maps to url "/form"
 @WebServlet(name = "LoginServlet", urlPatterns = "/login")
 public class LoginServlet extends HttpServlet {
-
-    // Create a dataSource which registered in web.xml
     private DataSource dataSource;
 
     public void init(ServletConfig config) {
@@ -44,7 +42,6 @@ public class LoginServlet extends HttpServlet {
             return;
         }
 
-        // Get the email and password from the form
         String email = request.getParameter("email");
         String password = request.getParameter("password");
 
@@ -54,10 +51,8 @@ public class LoginServlet extends HttpServlet {
         }
 
         try {
-            // Establish connection to the database
             Connection dbCon = dataSource.getConnection();
 
-            // Query to verify email and password
             String query = "SELECT * FROM customers WHERE email = ? AND password = ?";
             PreparedStatement statement = dbCon.prepareStatement(query);
             statement.setString(1, email);
@@ -66,15 +61,12 @@ public class LoginServlet extends HttpServlet {
             ResultSet rs = statement.executeQuery();
 
             if (rs.next()) {
-                // Successful login, create session
                 HttpSession session = request.getSession();
                 session.setAttribute("user", email);
                 int userId = rs.getInt("id");
                 session.setAttribute("user_id", userId);
-                // Redirect to the main page after successful login
                 response.sendRedirect("main.html");
             } else {
-                // Invalid credentials, redirect to login page with error
                 response.sendRedirect("login.html?error=invalid_credentials");
             }
 
@@ -88,10 +80,8 @@ public class LoginServlet extends HttpServlet {
         }
     }
 
-    // Optional: If you want to handle GET requests as well
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        // Handle GET requests, e.g., redirect to login page if accessed directly
         response.sendRedirect("login.html");
     }
 }
