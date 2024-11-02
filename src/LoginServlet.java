@@ -35,6 +35,14 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("text/html");
+        String recaptchaResponse = request.getParameter("g-recaptcha-response");
+        String secretKey = "6LeLunIqAAAAALrN77rqthLy2JmkUPeD1DTxEGGh";
+
+        boolean isRecaptchaVerified = RecaptchaVerifier.verify(recaptchaResponse, secretKey);
+        if (!isRecaptchaVerified) {
+            response.sendRedirect("login.html?error=recaptcha"); // Redirect with error if verification fails
+            return;
+        }
 
         // Get the email and password from the form
         String email = request.getParameter("email");
