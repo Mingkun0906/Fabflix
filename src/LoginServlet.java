@@ -51,29 +51,27 @@ public class LoginServlet extends HttpServlet {
         }
 
         try {
-            Connection dbCon = dataSource.getConnection();
+            boolean success = VerifyPassword.verifyCredentials(email, password);
 
-            String query = "SELECT * FROM customers WHERE email = ? AND password = ?";
-            PreparedStatement statement = dbCon.prepareStatement(query);
-            statement.setString(1, email);
-            statement.setString(2, password);
-
-            ResultSet rs = statement.executeQuery();
-
-            if (rs.next()) {
+            if (success) {
                 HttpSession session = request.getSession();
                 session.setAttribute("user", email);
-                int userId = rs.getInt("id");
-                session.setAttribute("user_id", userId);
+                Connection dbCon = dataSource.getConnection();
+                String query = "SELECT id FROM customers WHERE email = ?";
+                PreparedStatement statement = dbCon.prepareStatement(query);
+                statement.setString(1, email);
+                ResultSet rs = statement.executeQuery();
+                if (rs.next()) {
+                    int userId = rs.getInt("id");
+                    session.setAttribute("user_id", userId);
+                }
+                rs.close();
+                statement.close();
+                dbCon.close();
                 response.sendRedirect("main.html");
             } else {
                 response.sendRedirect("login.html?error=invalid_credentials");
             }
-
-            rs.close();
-            statement.close();
-            dbCon.close();
-
         } catch (Exception e) {
             e.printStackTrace();
             response.sendRedirect("login.html?error=server_error");
@@ -85,3 +83,4 @@ public class LoginServlet extends HttpServlet {
         response.sendRedirect("login.html");
     }
 }
+
