@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FabFlix Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+    <h1 class="text-center mb-4">Dashboard</h1>
+
+    <div class="form-section">
+        <h2>Add New Movie</h2>
+        <form id="addMovieForm">
+            <div class="mb-3">
+                <label for="movieTitle" class="form-label">Movie Title*</label>
+                <input type="text" class="form-control" id="movieTitle" required>
+            </div>
+            <div class="mb-3">
+                <label for="movieYear" class="form-label">Year*</label>
+                <input type="number" class="form-control" id="movieYear" required>
+            </div>
+            <div class="mb-3">
+                <label for="movieDirector" class="form-label">Director*</label>
+                <input type="text" class="form-control" id="movieDirector" required>
+            </div>
+            <div class="mb-3">
+                <label for="starName" class="form-label">Star Name*</label>
+                <input type="text" class="form-control" id="starName" required>
+            </div>
+            <div class="mb-3">
+                <label for="genreName" class="form-label">Genre*</label>
+                <input type="text" class="form-control" id="genreName" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Add Movie</button>
+        </form>
+        <div id="movieAlert" class="alert" role="alert"></div>
+    </div>
+
+    <div class="form-section">
+        <h2>Add New Star</h2>
+        <form id="addStarForm">
+            <div class="mb-3">
+                <label for="starNameOnly" class="form-label">Star Name*</label>
+                <input type="text" class="form-control" id="starNameOnly" required>
+            </div>
+            <div class="mb-3">
+                <label for="birthYear" class="form-label">Birth Year</label>
+                <input type="number" class="form-control" id="birthYear">
+            </div>
+            <button id="add-star" class="btn btn-primary">Add Star</button>
+        </form>
+        <div id="starAlert" class="alert" role="alert"></div>
+    </div>
+
+    <div class="metadata-section">
+        <h2>Database Metadata</h2>
+        <button id="loadMetadata" class="btn btn-secondary">Load Metadata</button>
+        <div id="metadataContent">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Table</th>
+                    <th>Column</th>
+                    <th>Type</th>
+                </tr>
+                </thead>
+                <tbody id="metadataTableBody">
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="dashboard.js"></script>
+</body>
+</html>

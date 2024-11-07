@@ -5,6 +5,9 @@ import java.sql.Statement;
 
 import org.jasypt.util.password.StrongPasswordEncryptor;
 
+import javax.naming.InitialContext;
+import javax.sql.DataSource;
+
 public class VerifyPassword {
 
     /*
