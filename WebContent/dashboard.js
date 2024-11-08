@@ -13,20 +13,29 @@ function showMessage(message, type, alertId) {
 document.getElementById('addMovieForm').addEventListener('submit', async (event) => {
     event.preventDefault();
 
-    const formData = new FormData();
-    formData.append('title', document.getElementById('movieTitle').value);
-    formData.append('year', document.getElementById('movieYear').value);
-    formData.append('director', document.getElementById('movieDirector').value);
-    formData.append('star_name', document.getElementById('starName').value);
-    formData.append('genre_name', document.getElementById('genreName').value);
+    // Create a single object like in add-star
+    const formData = {
+        title: document.getElementById('movieTitle').value,
+        year: document.getElementById('movieYear').value || "",
+        director: document.getElementById('movieDirector').value,
+        star_name: document.getElementById('starName').value,
+        genre_name: document.getElementById('genreName').value
+    };
+
+    console.log("Sending movie data:", formData);
 
     try {
         const response = await fetch('_dashboard/add-movie', {
             method: 'POST',
-            body: formData
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
         });
 
         const data = await response.json();
+        console.log('Response:', data);
+
         showMessage(
             data.message,
             data.status === 'success' ? 'success' : 'error',
@@ -54,7 +63,7 @@ document.getElementById('add-star').addEventListener('click', async (event) => {
             method: 'POST',
             body: JSON.stringify(formData)
         });
-        console.log(formData);
+        //console.log(formData);
         const data = await response.json();
         showMessage(
             data.message,

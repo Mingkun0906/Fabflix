@@ -56,18 +56,23 @@ public class DashboardServlet extends HttpServlet {
         JsonObject responseJsonObject = new JsonObject();
 
         try {
-            String movieTitle = request.getParameter("title");
-            int movieYear = Integer.parseInt(request.getParameter("year"));
-            String movieDirector = request.getParameter("director");
-            String starName = request.getParameter("star_name");
-            String genreName = request.getParameter("genre_name");
+            String jsonString = request.getReader().readLine();
+            JsonObject jsonRequest = JsonParser.parseString(jsonString).getAsJsonObject();
+
+            String movieTitle = jsonRequest.has("title") ? jsonRequest.get("title").getAsString() : null;
+            String yearStr = jsonRequest.has("year") ? jsonRequest.get("year").getAsString() : null;
+            String movieDirector = jsonRequest.has("director") ? jsonRequest.get("director").getAsString() : null;
+            String starName = jsonRequest.has("star_name") ? jsonRequest.get("star_name").getAsString() : null;
+            String genreName = jsonRequest.has("genre_name") ? jsonRequest.get("genre_name").getAsString() : null;
 
             if (movieTitle == null || movieTitle.trim().isEmpty() ||
                     movieDirector == null || movieDirector.trim().isEmpty() ||
                     starName == null || starName.trim().isEmpty() ||
                     genreName == null || genreName.trim().isEmpty()) {
-                throw new IllegalArgumentException("All fields except star birth year are required");
+                throw new IllegalArgumentException("All fields are required");
             }
+
+            int movieYear = Integer.parseInt(yearStr);
 
             try (Connection conn = dataSource.getConnection()) {
                 CallableStatement statement = conn.prepareCall("{CALL add_movie(?, ?, ?, ?, ?)}");
@@ -98,7 +103,6 @@ public class DashboardServlet extends HttpServlet {
         response.setContentType("application/json");
         response.getWriter().write(responseJsonObject.toString());
     }
-
     private void handleAddStar(HttpServletRequest request, HttpServletResponse response) throws IOException {
         JsonObject responseJsonObject = new JsonObject();
 
