@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Login</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+</head>
+<body>
+<div class="container mt-5">
+  <h2>Admin Login</h2>
+  <form action="admin_login" method="post">
+    <div class="form-group">
+      <label for="email">Email:</label>
+      <input type="email" class="form-control" id="email" name="email" required>
+    </div>
+    <div class="form-group">
+      <label for="password">Password:</label>
+      <input type="password" class="form-control" id="password" name="password" required>
+    </div>
+    <!-- reCAPTCHA widget -->
+    <div class="g-recaptcha" data-sitekey="6LeLunIqAAAAALsM_NYUkQ-2NGMHmFB3fgqRMnDK"></div>
+
+    <button type="submit" class="btn btn-primary">Login</button>
+    <div id="error-message" class="text-danger mt-2"></div>
+  </form>
+</div>
+
+<script>
+  // Check for 'error' in the URL parameters
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('error') === 'invalid') {
+    document.getElementById('error-message').innerText = "Invalid email or password.";
+  } else if (urlParams.get('error') === 'recaptcha') {
+    document.getElementById('error-message').innerText = "Please verify the reCAPTCHA.";
+  }
+</script>
+</body>
+</html>

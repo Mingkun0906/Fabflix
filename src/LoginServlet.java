@@ -18,7 +18,7 @@ import jakarta.servlet.http.HttpSession;
  */
 
 // Declaring a WebServlet called FormServlet, which maps to url "/form"
-@WebServlet(name = "LoginServlet", urlPatterns = "/login")
+@WebServlet(name = "LoginServlet", urlPatterns = "/admin-login")
 public class LoginServlet extends HttpServlet {
     private DataSource dataSource;
 
