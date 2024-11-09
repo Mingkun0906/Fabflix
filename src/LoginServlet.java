@@ -18,7 +18,7 @@ import jakarta.servlet.http.HttpSession;
  */
 
 // Declaring a WebServlet called FormServlet, which maps to url "/form"
-@WebServlet(name = "LoginServlet", urlPatterns = "/admin-login")
+@WebServlet(name = "LoginServlet", urlPatterns = "/login")
 public class LoginServlet extends HttpServlet {
     private DataSource dataSource;
 
@@ -68,6 +68,7 @@ public class LoginServlet extends HttpServlet {
                 statement.close();
                 dbCon.close();
                 response.sendRedirect("main.html");
+
             } else {
                 response.sendRedirect("login.html?error=invalid_credentials");
             }
