@@ -26,9 +26,17 @@ public class LoginFilter implements Filter {
             chain.doFilter(request, response);
             return;
         }
+
+        if (requestURI.endsWith("/_dashboard")) {
+            httpResponse.sendRedirect(contextPath + "/admin-login.html");
+            return;
+        }
+
         if (requestURI.equals(contextPath + "/") ||
                 requestURI.endsWith("login.html") ||
-                requestURI.endsWith("/login")) {
+                requestURI.endsWith("admin_login.html") || // Allow access to admin login page
+                requestURI.endsWith("/login") ||
+                requestURI.endsWith("/admin_login")) {
             chain.doFilter(request, response);
             return;
         }
