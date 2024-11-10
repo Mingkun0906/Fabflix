@@ -1,8 +1,6 @@
--- Create the moviedb database
 CREATE DATABASE IF NOT EXISTS moviedb;
 USE moviedb;
 
--- Create movies table
 CREATE TABLE movies (
     id VARCHAR(10) PRIMARY KEY,
     title VARCHAR(100) NOT NULL,
@@ -72,4 +70,3 @@ CREATE TABLE ratings (
     PRIMARY KEY (movieId),
     FOREIGN KEY (movieId) REFERENCES movies(id)
 );
-
