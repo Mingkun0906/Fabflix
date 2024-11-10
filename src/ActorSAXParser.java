@@ -87,7 +87,7 @@ public class ActorSAXParser {
             SAXParserFactory factory = SAXParserFactory.newInstance();
             SAXParser saxParser = factory.newSAXParser();
             ActorSAXHandler handler = new ActorSAXHandler();
-            saxParser.parse("/Users/mingkunliu/Downloads/2024-fall-cs-122b-team-beef/data/actors63.xml", handler);
+            saxParser.parse("data/actors63.xml", handler);
 
             List<Actor> actors = handler.getActors();
             insertActorsIntoDatabase(actors);
