@@ -96,7 +96,7 @@ public class MoviesServlet extends HttpServlet {
             }
 
             String countQuery = "SELECT COUNT(DISTINCT m.id) as total FROM movies m " +
-                    "JOIN ratings r ON m.id = r.movieId " +
+                    "LEFT JOIN ratings r ON m.id = r.movieId " +
                     "LEFT JOIN genres_in_movies gim ON m.id = gim.movieId " +
                     "LEFT JOIN genres g ON gim.genreId = g.id " +
                     "LEFT JOIN stars_in_movies sim ON m.id = sim.movieId " +
@@ -124,23 +124,27 @@ public class MoviesServlet extends HttpServlet {
             countRs.close();
             countStatement.close();
 
-            String baseQuery = "SELECT DISTINCT m.id, m.title, m.year, m.director, r.rating, m.price, " +
-                    "(SELECT GROUP_CONCAT(CONCAT(star_info.id, '::', star_info.name, '::', star_info.movie_count) " +
-                    "                    ORDER BY star_info.movie_count DESC, star_info.name ASC " +
-                    "                    SEPARATOR ', ') " +
-                    "FROM (SELECT DISTINCT s.id, s.name, " +
-                    "             (SELECT COUNT(*) FROM stars_in_movies WHERE starId = s.id) as movie_count " +
-                    "      FROM stars s " +
-                    "      JOIN stars_in_movies sim ON s.id = sim.starId " +
-                    "      WHERE sim.movieId = m.id " +
-                    "      ORDER BY movie_count DESC, s.name ASC " +
-                    "      LIMIT 3) star_info) AS stars_info, " +
-                    "(SELECT GROUP_CONCAT(g.name ORDER BY g.name ASC SEPARATOR ', ') " +
-                    "FROM genres g " +
-                    "JOIN genres_in_movies gim ON g.id = gim.genreId " +
-                    "WHERE gim.movieId = m.id) AS genre_names " +
+            String baseQuery = "SELECT DISTINCT m.id, m.title, m.year, m.director, COALESCE(r.rating, 0.0) as rating, m.price, " +
+                    "COALESCE(" +
+                    "  (SELECT GROUP_CONCAT(CONCAT(star_info.id, '::', star_info.name, '::', star_info.movie_count) " +
+                    "   ORDER BY star_info.movie_count DESC, star_info.name ASC " +
+                    "   SEPARATOR ', ') " +
+                    "   FROM (SELECT DISTINCT s.id, s.name, " +
+                    "                (SELECT COUNT(*) FROM stars_in_movies WHERE starId = s.id) as movie_count " +
+                    "         FROM stars s " +
+                    "         LEFT JOIN stars_in_movies sim ON s.id = sim.starId " +
+                    "         WHERE sim.movieId = m.id " +
+                    "         ORDER BY movie_count DESC, s.name ASC " +
+                    "         LIMIT 3) star_info), " +
+                    "  '') AS stars_info, " +
+                    "COALESCE(" +
+                    "  (SELECT GROUP_CONCAT(g.name ORDER BY g.name ASC SEPARATOR ', ') " +
+                    "   FROM genres g " +
+                    "   JOIN genres_in_movies gim ON g.id = gim.genreId " +
+                    "   WHERE gim.movieId = m.id), " +
+                    "  '') AS genre_names " +
                     "FROM movies m " +
-                    "JOIN ratings r ON m.id = r.movieId " +
+                    "LEFT JOIN ratings r ON m.id = r.movieId " +
                     "LEFT JOIN stars_in_movies sim ON m.id = sim.movieId " +
                     "LEFT JOIN stars s ON sim.starId = s.id " +
                     "LEFT JOIN genres_in_movies gim ON m.id = gim.movieId " +
@@ -166,8 +170,8 @@ public class MoviesServlet extends HttpServlet {
             if (!field2.equals("rating") && !field2.equals("title")) field2 = "title";
 
             baseQuery += " ORDER BY " +
-                    (field1.equals("rating") ? "r.rating" : "m.title") + " " + order1 + ", " +
-                    (field2.equals("rating") ? "r.rating" : "m.title") + " " + order2;
+                    (field1.equals("rating") ? "rating" : "m.title") + " " + order1 + ", " +
+                    (field2.equals("rating") ? "rating" : "m.title") + " " + order2;
 
             int page = 1;
             int limit = 10;
@@ -234,7 +238,6 @@ public class MoviesServlet extends HttpServlet {
             response.setStatus(200);
 
         } catch (Exception e) {
-
             // Write error message JSON object to output
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("errorMessage", e.getMessage());
@@ -245,8 +248,5 @@ public class MoviesServlet extends HttpServlet {
         } finally {
             out.close();
         }
-
-        // Always remember to close db connection after usage. Here it's done by try-with-resources
-
     }
 }
