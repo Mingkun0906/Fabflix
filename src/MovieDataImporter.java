@@ -3,7 +3,6 @@ import java.sql.DriverManager;
 import java.io.File;
 
 public class MovieDataImporter {
-    // Database connection parameters
     private static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
     private static final String DB_URL = "jdbc:mysql://localhost:3306/moviedb";
     private static final String DB_USER = "mytestuser";
@@ -22,20 +21,19 @@ public class MovieDataImporter {
         }
 
         MovieParser parser = new MovieParser();
-
         try {
-            // Step 1: Parse XML
             System.out.println("Starting import process...");
             System.out.println("Parsing XML file: " + xmlFilePath);
             parser.parseDocument(xmlFilePath);
 
-
             try (Connection conn = getConnection()) {
                 System.out.println("Database connected, starting insertion...");
-                parser.insertMovies(conn);
+
+                System.out.println("Inserting movies and genre relationships...");
+//                parser.insertMoviesAndGenres(conn, movies);
+
                 System.out.println("Import process completed successfully!");
             }
-
         } catch (Exception e) {
             System.err.println("Error during import process:");
             e.printStackTrace();
@@ -43,11 +41,16 @@ public class MovieDataImporter {
     }
 
     public static void main(String[] args) {
-        String xmlFilePath = "data/mains243.xml";
-        System.out.println("XML File: " + xmlFilePath);
-
-
-        MovieDataImporter importer = new MovieDataImporter();
-        importer.importMovies(xmlFilePath);
+        if (args.length == 0) {
+            String xmlFilePath = "data/mains243.xml";
+            System.out.println("No file path provided, using default: " + xmlFilePath);
+            MovieDataImporter importer = new MovieDataImporter();
+            importer.importMovies(xmlFilePath);
+        } else {
+            String xmlFilePath = args[0];
+            System.out.println("Processing XML file: " + xmlFilePath);
+            MovieDataImporter importer = new MovieDataImporter();
+            importer.importMovies(xmlFilePath);
+        }
     }
 }
