@@ -3,13 +3,13 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import org.jasypt.util.password.StrongPasswordEncryptor;
 
 @WebServlet(name = "AdminLoginServlet", urlPatterns = "/admin_login")
 public class AdminLoginServlet extends HttpServlet {
@@ -30,32 +30,46 @@ public class AdminLoginServlet extends HttpServlet {
         String recaptchaResponse = request.getParameter("g-recaptcha-response");
         String secretKey = "6LeLunIqAAAAALrN77rqthLy2JmkUPeD1DTxEGGh";
 
-        // Verify reCAPTCHA
         boolean isRecaptchaVerified = RecaptchaVerifier.verify(recaptchaResponse, secretKey);
         if (!isRecaptchaVerified) {
             response.sendRedirect("admin-login.html?error=recaptcha");
             return;
         }
 
+        if (email == null || password == null || email.isEmpty() || password.isEmpty()) {
+            response.sendRedirect("admin-login.html?error=empty_fields");
+            return;
+        }
+
         try (Connection connection = dataSource.getConnection()) {
-            String query = "SELECT fullname FROM employees WHERE email = ? AND password = ?";
+            // First, retrieve the stored encrypted password and employee info
+            String query = "SELECT password, fullname FROM employees WHERE email = ?";
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, email);
-            statement.setString(2, password);
-
             ResultSet rs = statement.executeQuery();
+
             if (rs.next()) {
+                String storedEncryptedPassword = rs.getString("password");
                 String fullname = rs.getString("fullname");
 
-                // Create a session and set admin role
-                HttpSession session = request.getSession();
-                session.setAttribute("user", email);
-                session.setAttribute("role", "admin");
-                session.setAttribute("fullname", fullname);
+                // Use the same encryption method as in customer login
+                StrongPasswordEncryptor encryptor = new StrongPasswordEncryptor();
 
-                // Redirect to dashboard
-                response.sendRedirect("dashboard.html");
+                // Verify the password
+                if (encryptor.checkPassword(password, storedEncryptedPassword)) {
+                    // Password matches - create session
+                    HttpSession session = request.getSession();
+                    session.setAttribute("user", email);
+                    session.setAttribute("role", "admin");
+                    session.setAttribute("fullname", fullname);
+
+                    response.sendRedirect("dashboard.html");
+                } else {
+                    // Password doesn't match
+                    response.sendRedirect("admin-login.html?error=invalid");
+                }
             } else {
+                // No user found with that email
                 response.sendRedirect("admin-login.html?error=invalid");
             }
 
@@ -66,5 +80,4 @@ public class AdminLoginServlet extends HttpServlet {
             response.sendRedirect("admin-login.html?error=server");
         }
     }
-
 }

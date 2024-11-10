@@ -51,7 +51,7 @@ public class LoginServlet extends HttpServlet {
         }
 
         try {
-            boolean success = VerifyPassword.verifyCredentials("a@email.com", "a2");
+            boolean success = VerifyPassword.verifyCredentials(email, password);
             if (success) {
                 HttpSession session = request.getSession();
                 session.setAttribute("user", email);
