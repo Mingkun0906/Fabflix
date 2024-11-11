@@ -6,6 +6,7 @@ detailed information, including the top stars and genres for each movie.
 ## Video url
 - https://youtu.be/ahCbn9ZfatM (proj1)
 - https://youtu.be/XPMR9KZYtgU (proj2)
+- https://youtu.be/sQ0nNFSsyv4 (proj3)
 
 ## Contributions
 
