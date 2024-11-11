@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function() {
         window.location.href = "movie-list.html?" + queryParams.join("&");
     });
 
-    fetch('/cs122b_team_beef/api/genres')
+    fetch('/cs122b-team-beef/api/genres')
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not OK');
