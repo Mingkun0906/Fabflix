@@ -322,7 +322,7 @@ public class CastSAXParser {
 
         connection = DriverManager.getConnection(url, user, password);
         connection.setAutoCommit(false);
-        String insertSQL = "INSERT INTO backup_sm (starId, movieId) VALUES (?, ?)";
+        String insertSQL = "INSERT IGNORE INTO stars_in_movies (starId, movieId) VALUES (?, ?)";
         insertStmt = connection.prepareStatement(insertSQL);
     }
 

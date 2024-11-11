@@ -87,7 +87,11 @@ public class DashboardServlet extends HttpServlet {
 
                 if (rs.next()) {
                     String message = rs.getString("message");
-                    responseJsonObject.addProperty("message", message);
+                    String movieId = rs.getString("movie_id");
+                    String starId = rs.getString("star_id");
+                    String genreId = rs.getString("genre_id");
+                    responseJsonObject.addProperty("message",
+                            message + " movie id:" + movieId + " star id:" + starId + " genre id:" + genreId);
                     responseJsonObject.addProperty("status", "success");
                 }
 
@@ -136,7 +140,7 @@ public class DashboardServlet extends HttpServlet {
                 pstmt.executeUpdate();
 
                 responseJsonObject.addProperty("status", "success");
-                responseJsonObject.addProperty("message", "Star added successfully");
+                responseJsonObject.addProperty("message", "Star added successfully, starId:" + newId);
             }
         } catch (Exception e) {
             responseJsonObject.addProperty("status", "error");

@@ -1,15 +1,5 @@
-CREATE TABLE IF NOT EXISTS employees (
-     email VARCHAR(50) PRIMARY KEY,
-     password VARCHAR(20) NOT NULL,
-     fullname VARCHAR(100)
-);
-
-INSERT INTO employees (email, password, fullname)
-VALUES ('classta@email.edu', 'classta', 'TA CS122B');
-
-
+DROP PROCEDURE IF EXISTS add_movie;
 DELIMITER //
-
 CREATE PROCEDURE add_movie(
     IN p_movie_title VARCHAR(100),
     IN p_movie_year INTEGER,
@@ -34,7 +24,6 @@ BEGIN
         SELECT MAX(CAST(SUBSTRING(id, 3) AS UNSIGNED)) INTO v_max_movie_id
         FROM movies
         WHERE id LIKE 'tt%';
-
         SET v_movie_id = CONCAT('tt', LPAD(COALESCE(v_max_movie_id + 1, 1), 7, '0'));
 
         INSERT INTO movies (id, title, year, director)
@@ -48,9 +37,7 @@ BEGIN
             SELECT MAX(CAST(SUBSTRING(id, 3) AS UNSIGNED)) INTO v_max_star_id
             FROM stars
             WHERE id LIKE 'nm%';
-
             SET v_star_id = CONCAT('nm', LPAD(COALESCE(v_max_star_id + 1, 1), 7, '0'));
-
             INSERT INTO stars (id, name)
             VALUES (v_star_id, p_star_name);
         END IF;
@@ -65,7 +52,6 @@ BEGIN
         IF v_genre_id IS NULL THEN
             INSERT INTO genres (name)
             VALUES (p_genre_name);
-
             SET v_genre_id = LAST_INSERT_ID();
         END IF;
 
@@ -73,15 +59,18 @@ BEGIN
         VALUES (v_genre_id, v_movie_id);
 
         COMMIT;
+
         SELECT 'Success: Movie added successfully' as message,
                v_movie_id as movie_id,
                v_star_id as star_id,
                v_genre_id as genre_id;
     ELSE
         ROLLBACK;
-        SELECT 'Error: Movie already exists' as message;
+        -- Return error message with same column structure
+        SELECT 'Error: Movie already exists' as message,
+               v_movie_id as movie_id,
+               NULL as star_id,
+               NULL as genre_id;
     END IF;
-
 END //
-
 DELIMITER ;

@@ -179,7 +179,7 @@ public class MultiThreadMDI {
     }
 
     public static void main(String[] args) {
-        String xmlFilePath = args.length > 0 ? args[0] : "data/mains243.xml";
+        String xmlFilePath = "data/mains243.xml";
         System.out.println("Processing XML file: " + xmlFilePath);
         MultiThreadMDI importer = new MultiThreadMDI();
         importer.importMovies(xmlFilePath);

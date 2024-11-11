@@ -77,7 +77,7 @@ public class MovieParser extends DefaultHandler {
     }
 
     public void initializeGenres(Connection conn) throws SQLException {
-        String selectSQL = "SELECT id, name FROM genres_cpy";
+        String selectSQL = "SELECT id, name FROM genres";
         try (Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(selectSQL)) {
             while (rs.next()) {
@@ -88,13 +88,13 @@ public class MovieParser extends DefaultHandler {
         // Get the next available ID
         int nextId = 1;
         try (Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery("SELECT MAX(id) + 1 FROM genres_cpy")) {
+             ResultSet rs = stmt.executeQuery("SELECT MAX(id) + 1 FROM genres")) {
             if (rs.next()) {
                 nextId = Math.max(rs.getInt(1), 1); // Ensure we start at least at 1
             }
         }
 
-        String insertSQL = "INSERT INTO genres_cpy (id, name) VALUES (?, ?)";
+        String insertSQL = "INSERT INTO genres (id, name) VALUES (?, ?)";
         try (PreparedStatement pstmt = conn.prepareStatement(insertSQL)) {
             conn.setAutoCommit(false);
 
@@ -219,7 +219,7 @@ public class MovieParser extends DefaultHandler {
 
         insertMovies(conn, movies);
 
-        String insertGenreSQL = "INSERT IGNORE INTO genres_in_movies_cpy (genreId, movieId) VALUES (?, ?)";
+        String insertGenreSQL = "INSERT IGNORE INTO genres_in_movies (genreId, movieId) VALUES (?, ?)";
 
         int batchSize = 1000;
         int recordCount = 0;
@@ -278,7 +278,7 @@ public class MovieParser extends DefaultHandler {
     }
 
     public void insertMovies(Connection conn, List<Movie> movies) throws SQLException {
-        String insertSQL = "INSERT IGNORE INTO movies_cpy (id, title, year, director) VALUES (?, ?, ?, ?)";
+        String insertSQL = "INSERT IGNORE INTO movies (id, title, year, director) VALUES (?, ?, ?, ?)";
 
         int batchSize = 1000;
         int recordCount = 0;
