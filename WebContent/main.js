@@ -64,11 +64,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     fullTextSearchForm.addEventListener('submit', function (event) {
         event.preventDefault();
-
-        // Get and prepare the search query
         let query = document.getElementById('full-text-search-box').value.trim();
 
-        // Split the query into words and prepare them for MySQL full-text search
         if (query) {
             // Split on spaces and handle special characters
             const words = query.split(/\s+/)
@@ -76,13 +73,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 .map(word => {
                     // Remove special characters that might interfere with search
                     word = word.replace(/[^\w\s]/gi, '');
-                    return word;
+                    // Add + for AND operation and * for prefix matching
+                    return '+' + word + '*';
                 });
 
-            // Join words with proper full-text search syntax
+            // Join words with spaces for MySQL FULLTEXT search
             query = words.join(' ');
 
-            window.location.href = "movie-list.html?query=" + encodeURIComponent(query);
+            window.location.href = "movie-list.html?fulltext=" + encodeURIComponent(query);
         }
     });
 });

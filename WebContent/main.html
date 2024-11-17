@@ -22,26 +22,29 @@
     </style>
 </head>
 <body>
-<!-- Add Fabflix logo that refreshes the page -->
 <a href="main.html" class="logo">Fabflix</a>
-<div class="top-right-search">
-    <form id="full-text-search-form" class="d-flex">
-        <input type="text" id="full-text-search-box" class="form-control" placeholder="Search movies..." autocomplete="off">
-        <button id="full-text-search-button" type="submit" class="btn">
-            <img src="magnifier-icon.png" alt="Search" style="width: 20px; height: 20px;">
-        </button>
-    </form>
-</div>
 
-<button id="checkout-button" class="btn btn-danger" style="position: fixed; bottom: 20px; right: 20px;">
-    Checkout
-</button>
 <div class="container mt-5">
     <h1 class="text-center mb-5">Welcome to Fabflix</h1>
 
-    <!-- Search Container -->
+    <!-- Main Full-text Search Container -->
     <div class="search-container mb-5">
-        <h2 class="text-center mb-4">Search Movies</h2>
+        <h2 class="text-center mb-4">Quick Search</h2>
+        <form id="full-text-search-form" class="row justify-content-center">
+            <div class="col-md-10 mb-3">
+                <input type="text" id="full-text-search-box" class="form-control" placeholder="Search movies..." autocomplete="off">
+            </div>
+            <div class="col-md-2 mb-3">
+                <button id="full-text-search-button" type="submit" class="btn btn-danger w-100">
+                    Search
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Advanced Search Container -->
+    <div class="search-container mb-5">
+        <h2 class="text-center mb-4">Advanced Search</h2>
         <form id="search-form" class="row justify-content-center">
             <div class="col-md-3 mb-3">
                 <input type="text" class="form-control" id="title" placeholder="Title">
