@@ -97,8 +97,33 @@ public class MoviesServlet extends HttpServlet {
             }
 
             if (fulltext != null && !fulltext.isEmpty()) {
-                conditions.add("MATCH(m.title) AGAINST(? IN BOOLEAN MODE)");
-                parameters.add(fulltext); // Ensure fulltext is properly formatted: +word1* +word2*
+                try {
+                    fulltext = java.net.URLDecoder.decode(fulltext, "UTF-8").trim();
+
+                    if (!fulltext.isEmpty()) {
+                        String[] terms = fulltext.split("\\s+");
+                        StringBuilder searchQuery = new StringBuilder();
+
+                        for (String term : terms) {
+                            term = term.replaceAll("[+*]", "").trim();
+                            if (!term.isEmpty()) {
+                                searchQuery.append("+" + term + "* ");
+                            }
+                        }
+                        if (searchQuery.length() > 0) {
+                            conditions.add("MATCH(m.title) AGAINST(? IN BOOLEAN MODE)");
+                            parameters.add(searchQuery.toString().trim());
+                        }
+                    }
+                } catch (Exception e) {
+                    System.out.println("Error processing fulltext parameter: " + e.getMessage());
+                    e.printStackTrace();
+                    JsonObject jsonObject = new JsonObject();
+                    jsonObject.addProperty("errorMessage", "Invalid fulltext search query.");
+                    out.write(jsonObject.toString());
+                    response.setStatus(400);
+                    return;
+                }
             }
 
             String countQuery = "SELECT COUNT(DISTINCT m.id) as total FROM movies m " +
