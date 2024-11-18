@@ -2,24 +2,26 @@ document.addEventListener('DOMContentLoaded', function() {
     const searchForm = document.getElementById('search-form');
 
     searchForm.addEventListener('submit', function(event) {
-        event.preventDefault();
+        event.preventDefault(); // Prevent the default form submission
 
+        // Get the form data
         const title = document.getElementById('title').value;
         const year = document.getElementById('year').value;
         const director = document.getElementById('director').value;
         const star = document.getElementById('star').value;
 
+        // Build the query string
         const queryParams = [];
         if (title) queryParams.push("title=" + encodeURIComponent(title));
         if (year) queryParams.push("year=" + encodeURIComponent(year));
         if (director) queryParams.push("director=" + encodeURIComponent(director));
         if (star) queryParams.push("star=" + encodeURIComponent(star));
 
+        // Redirect to the movie list page with the search parameters
         window.location.href = "movie-list.html?" + queryParams.join("&");
     });
 
-    // Genre list fetch and rendering
-    fetch('/cs122b_project1_api_example_war/api/genres')
+    fetch('/cs122b-team-beef/api/genres')
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not OK');
@@ -28,26 +30,26 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .then(genres => {
             const genreListElement = document.getElementById('genre-list');
-            genreListElement.innerHTML = '';
+            genreListElement.innerHTML = ''; // Clear existing genres, if any
 
             genres.forEach(genre => {
                 const genreLink = document.createElement('a');
                 genreLink.href = "movie-list.html?genre=" + encodeURIComponent(genre.name);
                 genreLink.textContent = genre.name;
-                genreLink.classList.add('genre-link', 'm-2');
+                genreLink.classList.add('genre-link', 'm-2'); // Add margin for spacing
                 genreListElement.appendChild(genreLink);
             });
         })
         .catch(error => console.error('Error fetching genres:', error));
 
-    // Alphabet list rendering
+    // Render alphabet list for browsing by title
     const alphabet = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ*'.split('');
     const alphabetListElement = document.getElementById('alphabet-list');
     alphabet.forEach(letter => {
         const letterLink = document.createElement('a');
         letterLink.href = "movie-list.html?title_start=" + encodeURIComponent(letter);
         letterLink.textContent = letter;
-        letterLink.classList.add('alphabet-link', 'm-2');
+        letterLink.classList.add('alphabet-link', 'm-2'); // Add margin for spacing
         alphabetListElement.appendChild(letterLink);
     });
 
@@ -57,30 +59,4 @@ document.addEventListener('DOMContentLoaded', function() {
             window.location.href = 'shopping-cart.html';
         });
     }
-});
-
-document.addEventListener('DOMContentLoaded', function () {
-    const fullTextSearchForm = document.getElementById('full-text-search-form');
-
-    fullTextSearchForm.addEventListener('submit', function (event) {
-        event.preventDefault();
-        let query = document.getElementById('full-text-search-box').value.trim();
-
-        if (query) {
-            // Split on spaces and handle special characters
-            const words = query.split(/\s+/)
-                .filter(word => word.length > 0)
-                .map(word => {
-                    // Remove special characters that might interfere with search
-                    word = word.replace(/[^\w\s]/gi, '');
-                    // Add + for AND operation and * for prefix matching
-                    return '+' + word + '*';
-                });
-
-            // Join words with spaces for MySQL FULLTEXT search
-            query = words.join(' ');
-
-            window.location.href = "movie-list.html?fulltext=" + encodeURIComponent(query);
-        }
-    });
 });
