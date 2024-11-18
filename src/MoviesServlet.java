@@ -60,6 +60,7 @@ public class MoviesServlet extends HttpServlet {
             String star = request.getParameter("star");
             String genre = request.getParameter("genre");
             String titleStart = request.getParameter("title_start");
+            String fulltext = request.getParameter("fulltext");
 
             List<String> conditions = new ArrayList<>();
             List<Object> parameters = new ArrayList<>();
@@ -93,6 +94,11 @@ public class MoviesServlet extends HttpServlet {
             if (genre != null && !genre.isEmpty()) {
                 conditions.add("g.name = ?");
                 parameters.add(genre);
+            }
+
+            if (fulltext != null && !fulltext.isEmpty()) {
+                conditions.add("MATCH(m.title) AGAINST(? IN BOOLEAN MODE)");
+                parameters.add(fulltext); // Ensure fulltext is properly formatted: +word1* +word2*
             }
 
             String countQuery = "SELECT COUNT(DISTINCT m.id) as total FROM movies m " +
@@ -149,6 +155,9 @@ public class MoviesServlet extends HttpServlet {
                     "LEFT JOIN stars s ON sim.starId = s.id " +
                     "LEFT JOIN genres_in_movies gim ON m.id = gim.movieId " +
                     "LEFT JOIN genres g ON gim.genreId = g.id";
+
+
+
 
             if (!conditions.isEmpty()) {
                 baseQuery += " WHERE " + String.join(" AND ", conditions);
