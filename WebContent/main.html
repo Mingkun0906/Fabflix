@@ -20,19 +20,54 @@
             text-decoration: none;
         }
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css">
+    <style>
+        /* Autocomplete custom styling */
+        .ui-autocomplete {
+            background-color: #333;
+            border: 1px solid #444;
+            max-height: 300px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            z-index: 1000;
+        }
+        .ui-menu-item {
+            color: #fff;
+            padding: 8px 12px;
+            cursor: pointer;
+        }
+        .ui-menu-item:hover, .ui-state-active {
+            background: #444;
+        }
+        .ui-helper-hidden-accessible {
+            display: none;
+        }
+    </style>
 </head>
 <body>
-<!-- Add Fabflix logo that refreshes the page -->
 <a href="main.html" class="logo">Fabflix</a>
-<button id="checkout-button" class="btn btn-danger" style="position: fixed; bottom: 20px; right: 20px;">
-    Checkout
-</button>
+
 <div class="container mt-5">
     <h1 class="text-center mb-5">Welcome to Fabflix</h1>
 
-    <!-- Search Container -->
+    <!-- Main Full-text Search Container -->
     <div class="search-container mb-5">
-        <h2 class="text-center mb-4">Search Movies</h2>
+        <h2 class="text-center mb-4">Quick Search</h2>
+        <form id="full-text-search-form" class="row justify-content-center">
+            <div class="col-md-10 mb-3">
+                <input type="text" id="full-text-search-box" class="form-control" placeholder="Search movies..." autocomplete="off">
+            </div>
+            <div class="col-md-2 mb-3">
+                <button id="full-text-search-button" type="submit" class="btn btn-danger w-100">
+                    Search
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Advanced Search Container -->
+    <div class="search-container mb-5">
+        <h2 class="text-center mb-4">Advanced Search</h2>
         <form id="search-form" class="row justify-content-center">
             <div class="col-md-3 mb-3">
                 <input type="text" class="form-control" id="title" placeholder="Title">
@@ -75,5 +110,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script src="main.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 </body>
 </html>

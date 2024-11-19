@@ -60,6 +60,7 @@ public class MoviesServlet extends HttpServlet {
             String star = request.getParameter("star");
             String genre = request.getParameter("genre");
             String titleStart = request.getParameter("title_start");
+            String fulltext = request.getParameter("fulltext");
 
             List<String> conditions = new ArrayList<>();
             List<Object> parameters = new ArrayList<>();
@@ -93,6 +94,36 @@ public class MoviesServlet extends HttpServlet {
             if (genre != null && !genre.isEmpty()) {
                 conditions.add("g.name = ?");
                 parameters.add(genre);
+            }
+
+            if (fulltext != null && !fulltext.isEmpty()) {
+                try {
+                    fulltext = java.net.URLDecoder.decode(fulltext, "UTF-8").trim();
+
+                    if (!fulltext.isEmpty()) {
+                        String[] terms = fulltext.split("\\s+");
+                        StringBuilder searchQuery = new StringBuilder();
+
+                        for (String term : terms) {
+                            term = term.replaceAll("[+*]", "").trim();
+                            if (!term.isEmpty()) {
+                                searchQuery.append("+" + term + "* ");
+                            }
+                        }
+                        if (searchQuery.length() > 0) {
+                            conditions.add("MATCH(m.title) AGAINST(? IN BOOLEAN MODE)");
+                            parameters.add(searchQuery.toString().trim());
+                        }
+                    }
+                } catch (Exception e) {
+                    System.out.println("Error processing fulltext parameter: " + e.getMessage());
+                    e.printStackTrace();
+                    JsonObject jsonObject = new JsonObject();
+                    jsonObject.addProperty("errorMessage", "Invalid fulltext search query.");
+                    out.write(jsonObject.toString());
+                    response.setStatus(400);
+                    return;
+                }
             }
 
             String countQuery = "SELECT COUNT(DISTINCT m.id) as total FROM movies m " +
@@ -149,6 +180,9 @@ public class MoviesServlet extends HttpServlet {
                     "LEFT JOIN stars s ON sim.starId = s.id " +
                     "LEFT JOIN genres_in_movies gim ON m.id = gim.movieId " +
                     "LEFT JOIN genres g ON gim.genreId = g.id";
+
+
+
 
             if (!conditions.isEmpty()) {
                 baseQuery += " WHERE " + String.join(" AND ", conditions);

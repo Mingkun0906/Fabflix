@@ -32,12 +32,16 @@ function getParameterByName(target) {
 }
 
 function formatStars(starsString) {
+    if (!starsString) return ''; // Add null check
+
     let starsArray = starsString.split(', ');
     let starsHTML = "";
 
     starsArray.forEach(star => {
         let [starId, starName] = star.split('::');
-        starsHTML += `<a href="single-star.html?id=${starId}">${starName}</a>, `;
+        if (starId && starName) { // Add null check
+            starsHTML += `<a href="single-star.html?id=${starId}">${starName}</a>, `;
+        }
     });
 
     // Remove last comma and return
@@ -50,41 +54,59 @@ function formatStars(starsString) {
  */
 
 function handleResult(resultData) {
-    console.log("handleResult: populating movie info from resultData");
+    console.log("handleResult: received data:", resultData);
+
+    if (!resultData || resultData.length === 0) {
+        console.error("No movie data received");
+        jQuery("#movie_info").html('<p class="text-danger">Movie not found</p>');
+        return;
+    }
 
     let movieInfoElement = jQuery("#movie_info");
 
-    // Extracting movie details
-    const movieTitle = resultData[0]["movie_title"];
-    const moviePrice = resultData[0]["movie_price"];
-    const genresArray = resultData[0]["movie_genres"].split(',');
-    const genresHTML = genresArray.map(genre =>
-        `<a href="movie-list.html?genre=${encodeURIComponent(genre.trim())}" class="genre-link">${genre.trim()}</a>`
-    ).join(', ');
+    try {
+        // Extracting movie details
+        const movieData = resultData[0];
+        console.log("Processing movie data:", movieData);
 
-    const starsHTML = formatStars(resultData[0]["movie_stars"]);
+        const movieTitle = movieData["movie_title"] || 'Unknown Title';
+        const moviePrice = movieData["movie_price"] || 9.99;
+        const genresArray = (movieData["movie_genres"] || '').split(',');
+        const genresHTML = genresArray
+            .filter(genre => genre.trim()) // Remove empty genres
+            .map(genre =>
+                `<a href="movie-list.html?genre=${encodeURIComponent(genre.trim())}" class="genre-link">${genre.trim()}</a>`
+            ).join(', ');
 
-    document.title = movieTitle;
-    jQuery("h1").text(movieTitle);
+        const starsHTML = formatStars(movieData["movie_stars"]);
 
-    // Populate movie info
-    movieInfoElement.append(`
-        <p><strong>Title:</strong> ${movieTitle}</p>
-        <p><strong>Year Released:</strong> ${resultData[0]["movie_year"]}</p>
-        <p><strong>Director:</strong> ${resultData[0]["movie_director"]}</p>
-        <p><strong>Stars:</strong> ${starsHTML}</p>
-        <p><strong>Rating:</strong> ${resultData[0]["movie_rating"]}</p>
-        <p><strong>Genres:</strong> ${genresHTML}</p>
-        <p><strong>Price:</strong> $${moviePrice.toFixed(2)}</p>
-        <button id="add-to-cart" class="btn btn-success mt-3" 
-            data-id="${resultData[0]['movie_id']}" 
-            data-title="${movieTitle}" 
-            data-price="${moviePrice}">
-            Add to Cart
-        </button>
-        <button id="checkout" class="btn btn-primary mt-3">Checkout</button>
-    `);
+        document.title = movieTitle;
+        jQuery("h1").text(movieTitle);
+
+        // Populate movie info
+        movieInfoElement.html(`
+            <p><strong>Title:</strong> ${movieTitle}</p>
+            <p><strong>Year Released:</strong> ${movieData["movie_year"] || 'Unknown'}</p>
+            <p><strong>Director:</strong> ${movieData["movie_director"] || 'Unknown'}</p>
+            <p><strong>Stars:</strong> ${starsHTML || 'No stars listed'}</p>
+            <p><strong>Rating:</strong> ${movieData["movie_rating"] || 'Not rated'}</p>
+            <p><strong>Genres:</strong> ${genresHTML || 'No genres listed'}</p>
+            <p><strong>Price:</strong> $${typeof moviePrice === 'number' ? moviePrice.toFixed(2) : '9.99'}</p>
+            <button id="add-to-cart" class="btn btn-success mt-3" 
+                data-id="${movieData['movie_id']}" 
+                data-title="${movieTitle}" 
+                data-price="${moviePrice}">
+                Add to Cart
+            </button>
+            <button id="checkout" class="btn btn-primary mt-3 ml-2">Checkout</button>
+        `);
+    } catch (error) {
+        console.error("Error processing movie data:", error);
+        movieInfoElement.html('<p class="text-danger">Error displaying movie information</p>');
+    }
 }
+
+
 
 $(document).on('click', '#add-to-cart', function() {
     const movieId = $(this).data('id');
@@ -140,11 +162,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Get id from URL
 let movieId = getParameterByName('id');
+console.log("Movie ID from URL:", movieId);
 
 // Makes the HTTP GET request and registers on success callback function handleResult
 jQuery.ajax({
-    dataType: "json",  // Setting return data type
-    method: "GET",// Setting request method
-    url: "api/single-movie?id=" + movieId, // Setting request url, which is mapped by StarsServlet in Stars.java
-    success: (resultData) => handleResult(resultData) // Setting callback function to handle data returned successfully by the SingleStarServlet
+    dataType: "json",
+    method: "GET",
+    url: "api/single-movie?id=" + movieId,
+    success: (resultData) => handleResult(resultData),
+    error: (xhr, status, error) => {
+        console.error("AJAX Error:", status, error);
+        jQuery("#movie_info").html('<p class="text-danger">Error loading movie data</p>');
+    }
 });
