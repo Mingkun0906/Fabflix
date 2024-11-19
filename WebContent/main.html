@@ -20,6 +20,29 @@
             text-decoration: none;
         }
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css">
+    <style>
+        /* Autocomplete custom styling */
+        .ui-autocomplete {
+            background-color: #333;
+            border: 1px solid #444;
+            max-height: 300px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            z-index: 1000;
+        }
+        .ui-menu-item {
+            color: #fff;
+            padding: 8px 12px;
+            cursor: pointer;
+        }
+        .ui-menu-item:hover, .ui-state-active {
+            background: #444;
+        }
+        .ui-helper-hidden-accessible {
+            display: none;
+        }
+    </style>
 </head>
 <body>
 <a href="main.html" class="logo">Fabflix</a>
@@ -87,5 +110,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script src="main.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 </body>
 </html>

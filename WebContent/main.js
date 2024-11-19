@@ -80,4 +80,104 @@ document.addEventListener('DOMContentLoaded', function() {
             window.location.href = 'shopping-cart.html';
         });
     }
+
+    let searchCache = {};
+    let searchTimeout = null;
+    let currentSelectedItem = null;
+
+    // Prevent form submission on enter when autocomplete is active
+    $('#full-text-search-form').on('submit', function(event) {
+        const autocomplete = $('#full-text-search-box').data('ui-autocomplete');
+        if (autocomplete && autocomplete.menu.active) {
+            event.preventDefault();
+            return false;
+        }
+    });
+
+    $('#full-text-search-box').autocomplete({
+        source: function(request, response) {
+            clearTimeout(searchTimeout);
+
+            if (request.term.length < 3) {
+                console.log('Autocomplete: Query too short (< 3 characters)');
+                response([]);
+                return;
+            }
+
+            const cacheKey = request.term.toLowerCase();
+            if (searchCache[cacheKey]) {
+                console.log('Autocomplete: Using cached results for:', request.term);
+                response(searchCache[cacheKey]);
+                return;
+            }
+
+            searchTimeout = setTimeout(function() {
+                console.log('Autocomplete: Initiating search for:', request.term);
+
+                $.ajax({
+                    url: 'api/autocomplete',
+                    dataType: 'json',
+                    data: { query: request.term },
+                    success: function(data) {
+                        searchCache[cacheKey] = data;
+                        console.log('Autocomplete: Received data:', data);
+                        response(data);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Autocomplete: Error fetching results:', error);
+                        response([]);
+                    }
+                });
+            }, 300);
+        },
+        minLength: 3,
+        select: function(event, ui) {
+            console.log('Autocomplete: Select triggered with item:', ui.item);
+            event.preventDefault();
+            event.stopPropagation();
+
+            if (ui.item.id) {
+                window.location.href = 'single-movie.html?id=' + ui.item.id;
+                return false;
+            }
+        },
+        focus: function(event, ui) {
+            console.log('Autocomplete: Focus triggered with item:', ui.item);
+            event.preventDefault();
+            currentSelectedItem = ui.item;
+            $(this).val(ui.item.value);
+            return false;
+        }
+    }).on('keydown', function(event) {
+        const autocomplete = $(this).data('ui-autocomplete');
+        const menu = autocomplete.menu;
+
+        if (event.keyCode === $.ui.keyCode.ENTER) {
+            console.log('Enter key pressed, menu active:', menu.active);
+
+            if (menu.active) {
+                event.preventDefault();
+                event.stopPropagation();
+
+                const selectedItem = menu.active.data('ui-autocomplete-item');
+                console.log('Selected item:', selectedItem);
+
+                if (selectedItem && selectedItem.id) {
+                    $(this).val(selectedItem.value);
+                    window.location.href = 'single-movie.html?id=' + selectedItem.id;
+                    return false;
+                }
+            }
+        }
+    });
+
+    $('#full-text-search-box').data('ui-autocomplete')._renderItem = function(ul, item) {
+        return $('<li>')
+            .data('ui-autocomplete-item', item)
+            .append($('<div>')
+                .text(item.value)
+                .addClass('ui-menu-item-wrapper'))
+            .appendTo(ul);
+    };
+
 });
