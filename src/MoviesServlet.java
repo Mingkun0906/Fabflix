@@ -23,20 +23,6 @@ import java.util.List;
 public class MoviesServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
-    // Create a dataSource which registered in web.
-    private DataSource dataSource;
-
-    public void init(ServletConfig config) {
-        try
-        {
-            dataSource = (DataSource) new InitialContext().lookup("java:comp/env/jdbc/moviedb");
-        }
-        catch (NamingException e)
-        {
-            e.printStackTrace();
-        }
-    }
-
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         HttpSession session = request.getSession(false); // false = don't create session if it doesn't exist
@@ -53,7 +39,7 @@ public class MoviesServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
 
         // Get a connection from dataSource and let resource manager close the connection after usage.
-        try (Connection conn = dataSource.getConnection()) {
+        try (Connection conn = DbService.getRandomConnection()) {
             String title = request.getParameter("title");
             String year = request.getParameter("year");
             String director = request.getParameter("director");

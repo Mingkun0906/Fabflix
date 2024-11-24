@@ -18,21 +18,12 @@ import java.sql.ResultSet;
 @WebServlet("/api/autocomplete")
 public class AutoCompleteServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
-    private DataSource dataSource;
-
-    public void init(ServletConfig config) {
-        try {
-            dataSource = (DataSource) new InitialContext().lookup("java:comp/env/jdbc/moviedb");
-        } catch (NamingException e) {
-            e.printStackTrace();
-        }
-    }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("application/json");
         PrintWriter out = response.getWriter();
 
-        try (Connection conn = dataSource.getConnection()) {
+        try (Connection conn = DbService.getRandomConnection()) {
             String query = request.getParameter("query");
             if (query == null || query.trim().length() < 3) {
                 out.write("[]");

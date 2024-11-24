@@ -12,15 +12,6 @@ import java.sql.*;
 
 @WebServlet(name = "DashboardServlet", urlPatterns = "/_dashboard/*")
 public class DashboardServlet extends HttpServlet {
-    private DataSource dataSource;
-
-    public void init() {
-        try {
-            dataSource = (DataSource) new InitialContext().lookup("java:comp/env/jdbc/moviedb");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String pathInfo = request.getPathInfo();
@@ -74,7 +65,7 @@ public class DashboardServlet extends HttpServlet {
 
             int movieYear = Integer.parseInt(yearStr);
 
-            try (Connection conn = dataSource.getConnection()) {
+            try (Connection conn = DbService.getMasterConnection()) {
                 CallableStatement statement = conn.prepareCall("{CALL add_movie(?, ?, ?, ?, ?)}");
 
                 statement.setString(1, movieTitle);
@@ -120,7 +111,7 @@ public class DashboardServlet extends HttpServlet {
                 throw new IllegalArgumentException("Star name is requiredddddd");
             }
 
-            try (Connection conn = dataSource.getConnection()) {
+            try (Connection conn = DbService.getMasterConnection()) {
                 String query = "SELECT MAX(CAST(SUBSTRING(id, 3) AS UNSIGNED)) as max_id FROM stars WHERE id LIKE 'nm%'";
                 Statement stmt = conn.createStatement();
                 ResultSet rs = stmt.executeQuery(query);
@@ -155,7 +146,7 @@ public class DashboardServlet extends HttpServlet {
     private void handleMetadataRequest(HttpServletResponse response) throws IOException {
         JsonArray jsonArray = new JsonArray();
 
-        try (Connection conn = dataSource.getConnection()) {
+        try (Connection conn = DbService.getRandomConnection()) {
             DatabaseMetaData metaData = conn.getMetaData();
             ResultSet tables = metaData.getTables(null, null, "%", new String[]{"TABLE"});
 

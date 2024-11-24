@@ -20,15 +20,6 @@ import jakarta.servlet.http.HttpSession;
 // Declaring a WebServlet called FormServlet, which maps to url "/form"
 @WebServlet(name = "LoginServlet", urlPatterns = "/login")
 public class LoginServlet extends HttpServlet {
-    private DataSource dataSource;
-
-    public void init(ServletConfig config) {
-        try {
-            dataSource = (DataSource) new InitialContext().lookup("java:comp/env/jdbc/moviedb");
-        } catch (NamingException e) {
-            e.printStackTrace();
-        }
-    }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -55,7 +46,7 @@ public class LoginServlet extends HttpServlet {
             if (success) {
                 HttpSession session = request.getSession();
                 session.setAttribute("user", email);
-                Connection dbCon = dataSource.getConnection();
+                Connection dbCon = DbService.getRandomConnection();
                 String query = "SELECT id FROM customers WHERE email = ?";
                 PreparedStatement statement = dbCon.prepareStatement(query);
                 statement.setString(1, email);

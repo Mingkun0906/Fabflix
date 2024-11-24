@@ -3,8 +3,6 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import javax.naming.InitialContext;
-import javax.sql.DataSource;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,15 +11,6 @@ import org.jasypt.util.password.StrongPasswordEncryptor;
 
 @WebServlet(name = "AdminLoginServlet", urlPatterns = "/admin_login")
 public class AdminLoginServlet extends HttpServlet {
-    private DataSource dataSource;
-
-    public void init() {
-        try {
-            dataSource = (DataSource) new InitialContext().lookup("java:comp/env/jdbc/moviedb");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -41,7 +30,7 @@ public class AdminLoginServlet extends HttpServlet {
             return;
         }
 
-        try (Connection connection = dataSource.getConnection()) {
+        try (Connection connection = DbService.getRandomConnection()) {
             // First, retrieve the stored encrypted password and employee info
             String query = "SELECT password, fullname FROM employees WHERE email = ?";
             PreparedStatement statement = connection.prepareStatement(query);
