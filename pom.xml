@@ -44,7 +44,8 @@
             </plugin>
             <plugin>
                 <artifactId>maven-war-plugin</artifactId>
-                <configuration>
+	        <version>3.3.2</version>
+		<configuration>
                     <warSourceDirectory>WebContent</warSourceDirectory>
                 </configuration>
             </plugin>
