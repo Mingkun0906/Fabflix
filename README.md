@@ -33,3 +33,5 @@
     - WebContent/META-INF/context.xml
     - #### How read/write requests were routed to Master/Slave SQL?
     - By using DbService class function, read request will randomly get master/slave connections, and write wil only get master connections.
+- # Fuzzy Search
+    - We utilize the provided udf in mysql and call the edit distance function when auto complete or searching for movies with title.
