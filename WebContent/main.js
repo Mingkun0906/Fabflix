@@ -104,16 +104,19 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
 
+            console.log(`Autocomplete query initiated for term: "${request.term}"`);
+
             const cacheKey = request.term.toLowerCase();
             if (searchCache[cacheKey]) {
-                console.log('Autocomplete: Using cached results for:', request.term);
+                console.log(`Autocomplete: Using cached results for term: "${request.term}"`);
                 response(searchCache[cacheKey]);
+                console.log('Autocomplete: Suggestion list:', searchCache[cacheKey]);
                 return;
+            } else {
+                console.log(`Autocomplete: Fetching results from the backend for term: "${request.term}"`);
             }
 
             searchTimeout = setTimeout(function() {
-                console.log('Autocomplete: Initiating search for:', request.term);
-
                 $.ajax({
                     url: 'api/autocomplete',
                     dataType: 'json',
@@ -122,6 +125,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         searchCache[cacheKey] = data;
                         console.log('Autocomplete: Received data:', data);
                         response(data);
+                        console.log('Autocomplete: Suggestion list:', data);
                     },
                     error: function(xhr, status, error) {
                         console.error('Autocomplete: Error fetching results:', error);
