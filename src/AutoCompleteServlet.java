@@ -42,10 +42,14 @@ public class AutoCompleteServlet extends HttpServlet {
 
             String sql = "SELECT DISTINCT id, title FROM movies " +
                     "WHERE MATCH(title) AGAINST(? IN BOOLEAN MODE) " +
+                    "UNION " +
+                    "SELECT DISTINCT id, title FROM movies " +
+                    "WHERE edth(LOWER(?), LOWER(title), 2) = 1 " +
                     "ORDER BY title LIMIT 10";
 
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, searchQuery.toString().trim());
+            stmt.setString(2, query.toLowerCase().trim());
             ResultSet rs = stmt.executeQuery();
 
             JsonArray jsonArray = new JsonArray();

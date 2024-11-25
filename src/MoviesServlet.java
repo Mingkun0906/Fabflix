@@ -52,8 +52,9 @@ public class MoviesServlet extends HttpServlet {
             List<Object> parameters = new ArrayList<>();
 
             if (title != null && !title.isEmpty()) {
-                conditions.add("m.title LIKE ?");
+                conditions.add("(m.title LIKE ? OR edth(LOWER(?), LOWER(m.title), 2) = 1)");
                 parameters.add("%" + title + "%");
+                parameters.add(title);
             }
             if (year != null && !year.isEmpty()) {
                 conditions.add("m.year = ?");
