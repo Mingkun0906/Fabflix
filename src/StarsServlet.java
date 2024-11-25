@@ -17,21 +17,12 @@ import java.sql.ResultSet;
 @WebServlet(name = "StarsServlet", urlPatterns = "/api/stars")
 public class StarsServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
-    private DataSource dataSource;
-
-    public void init(ServletConfig config) {
-        try {
-            dataSource = (DataSource) new InitialContext().lookup("java:comp/env/jdbc/moviedb");
-        } catch (NamingException e) {
-            e.printStackTrace();
-        }
-    }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("application/json");
         PrintWriter out = response.getWriter();
 
-        try (Connection conn = dataSource.getConnection();
+        try (Connection conn = DbService.getRandomConnection();
              PreparedStatement statement = conn.prepareStatement("SELECT * from stars");
              ResultSet rs = statement.executeQuery()) {
 

@@ -18,24 +18,14 @@ import java.sql.ResultSet;
 @WebServlet(name = "PaymentServlet", urlPatterns = "/api/payment")
 public class PaymentServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
-    private DataSource dataSource;
-
-    public void init(ServletConfig config) {
-        try {
-            dataSource = (DataSource) new InitialContext().lookup("java:comp/env/jdbc/moviedb");
-        } catch (NamingException e) {
-            e.printStackTrace();
-        }
-    }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        //HttpSession session = request.getSession();
 
 
         response.setContentType("application/json");
         PrintWriter out = response.getWriter();
 
-        try (Connection conn = dataSource.getConnection()) {
+        try (Connection conn = DbService.getRandomConnection()) {
             String creditCard = request.getParameter("creditCard").replaceAll("\\s", "");
             String firstName = request.getParameter("firstName");
             String lastName = request.getParameter("lastName");

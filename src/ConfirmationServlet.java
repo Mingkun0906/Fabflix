@@ -20,15 +20,6 @@ import java.util.Date;
 
 @WebServlet(name = "ConfirmationServlet", urlPatterns = "/api/confirmation")
 public class ConfirmationServlet extends HttpServlet {
-    private DataSource dataSource;
-
-    public void init(ServletConfig config) {
-        try {
-            dataSource = (DataSource) new InitialContext().lookup("java:comp/env/jdbc/moviedb");
-        } catch (NamingException e) {
-            e.printStackTrace();
-        }
-    }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         HttpSession session = request.getSession(false);
@@ -46,7 +37,7 @@ public class ConfirmationServlet extends HttpServlet {
                 return;
             }
 
-            Connection conn = dataSource.getConnection();
+            Connection conn = DbService.getMasterConnection();
 
             try {
                 conn.setAutoCommit(false);
