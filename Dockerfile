@@ -1,31 +1,26 @@
-# Imagine we start with an empty container (machine) here, each command below makes some changes to the machine
+# Stage 1: Dependencies
+FROM maven:3.8.5-openjdk-11-slim AS deps
+WORKDIR /app
+COPY pom.xml .
+# Download dependencies only
+RUN mvn dependency:go-offline -B
 
-# download all the necessary software to run maven (search this maven base image in DockerHub to see what is included)
+# Stage 2: Build
 FROM maven:3.8.5-openjdk-11-slim AS builder
-
-# create and `cd` into a folder called "app" inside the virtual machine
 WORKDIR /app
-
-# copy everything in the current folder into the "app" folder. (src/ WebContent/ etc)
+# Copy the dependencies from previous stage
+COPY --from=deps /root/.m2 /root/.m2
+# Copy source code
 COPY . .
+# Build with offline mode and skip tests
+RUN mvn clean package -B -DskipTests -o
 
-# compile the application inside the "app" folder to generate the war file
-RUN mvn clean package
-
-# download all the necessary software to run tomcat (this is another base image)
+# Stage 3: Runtime
 FROM tomcat:10-jdk11
-
-# `cd` into the "app" folder inside the machine
-WORKDIR /app
-
-# copy the war file what we have generated earlier into the tomcat webapps folder inside the container
+# Remove default Tomcat applications
+RUN rm -rf /usr/local/tomcat/webapps/*
+# Copy our application
 COPY --from=builder /app/target/cs122b-team-beef.war /usr/local/tomcat/webapps/cs122b-team-beef.war
 
-# open the 8080 port of the container, so that outside requests can reach the tomcat server
 EXPOSE 8080
-
-# start tomcat server in the foreground
 CMD ["catalina.sh", "run"]
-
-# Side note: The final image would only contain the `tomcat` base image but not the `maven` base image.
-# Learn more about Docker multi-stage build at (https://docs.docker.com/build/building/multi-stage/).
