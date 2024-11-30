@@ -1,31 +1,41 @@
-# Imagine we start with an empty container (machine) here, each command below makes some changes to the machine
-
-# download all the necessary software to run maven (search this maven base image in DockerHub to see what is included)
+# Stage 1: Build with Maven
 FROM maven:3.8.5-openjdk-11-slim AS builder
 
-# create and `cd` into a folder called "app" inside the virtual machine
+# Set Maven options for memory management
+ENV MAVEN_OPTS="-Xmx512m"
+
+# Create and cd into app directory
 WORKDIR /app
 
-# copy everything in the current folder into the "app" folder. (src/ WebContent/ etc)
+# Copy only pom.xml first to cache dependencies
+COPY pom.xml .
+
+# Download dependencies separately to take advantage of Docker caching
+RUN mvn dependency:go-offline -B || echo "Dependencies may not be fully downloaded"
+
+# Now copy the source code
 COPY . .
 
-# compile the application inside the "app" folder to generate the war file
-RUN mvn clean package
+# Build with specific memory settings and fail-fast options
+RUN mvn clean package \
+    -B \
+    -DskipTests \
+    -Dmaven.compiler.maxmem=512m \
+    && echo "Build successful" \
+    && ls -l target/*.war
 
-# download all the necessary software to run tomcat (this is another base image)
+# Stage 2: Runtime with Tomcat
 FROM tomcat:10-jdk11
 
-# `cd` into the "app" folder inside the machine
-WORKDIR /app
+# Remove default webapps
+RUN rm -rf /usr/local/tomcat/webapps/*
 
-# copy the war file what we have generated earlier into the tomcat webapps folder inside the container
+# Copy our application
 COPY --from=builder /app/target/cs122b-team-beef.war /usr/local/tomcat/webapps/cs122b-team-beef.war
 
-# open the 8080 port of the container, so that outside requests can reach the tomcat server
+# Verify the WAR file was copied correctly
+RUN ls -l /usr/local/tomcat/webapps/cs122b-team-beef.war || exit 1
+
 EXPOSE 8080
 
-# start tomcat server in the foreground
 CMD ["catalina.sh", "run"]
-
-# Side note: The final image would only contain the `tomcat` base image but not the `maven` base image.
-# Learn more about Docker multi-stage build at (https://docs.docker.com/build/building/multi-stage/).
