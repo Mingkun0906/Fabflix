@@ -8,12 +8,10 @@ import java.util.logging.Logger;
 
 public class DbService {
     private static DataSource masterDataSource;
-    private static DataSource slaveDataSource;
 
     static {
         try {
             masterDataSource = (DataSource) new InitialContext().lookup("java:comp/env/jdbc/moviedb_master");
-            slaveDataSource = (DataSource) new InitialContext().lookup("java:comp/env/jdbc/moviedb_slave");
         } catch (NamingException e) {
             throw new RuntimeException("Failed to initialize database connections", e);
         }
@@ -24,8 +22,6 @@ public class DbService {
     }
 
     public static Connection getRandomConnection() throws SQLException {
-        return ThreadLocalRandom.current().nextBoolean() ?
-                masterDataSource.getConnection() :
-                slaveDataSource.getConnection();
+        return masterDataSource.getConnection();
     }
 }
