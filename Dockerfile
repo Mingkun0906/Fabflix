@@ -10,7 +10,7 @@ WORKDIR /app
 COPY . .
 
 # compile the application inside the "app" folder to generate the war file
-RUN mvn package
+RUN mvn clean package
 
 # download all the necessary software to run tomcat (this is another base image)
 FROM tomcat:10-jdk11
