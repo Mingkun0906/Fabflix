@@ -32,7 +32,7 @@
         </script>
     </div>
 
-    <!-- Login Form with reCAPTCHA -->
+    <!-- Login Form -->
     <form action="login" method="POST">
         <div class="form-group">
             <label for="email">Email address:</label>
@@ -42,8 +42,6 @@
             <label for="password">Password:</label>
             <input type="password" class="form-control" id="password" name="password" placeholder="Enter password" required>
         </div>
-
-
         <button type="submit" class="btn btn-primary">Login</button>
     </form>
 </div>
@@ -86,10 +84,7 @@
             document.getElementById('error-message').innerText = "Please fill in both fields.";
         } else if (error === 'server_error') {
             document.getElementById('error-message').innerText = "An internal error occurred. Please try again.";
-        } else if (error === 'recaptcha') {
-            document.getElementById('error-message').innerText = "Please verify that you are not a robot.";
         }
-
 
         // Show a Bootstrap modal if redirected
         if (redirected === 'true') {

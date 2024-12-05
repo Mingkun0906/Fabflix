@@ -1,37 +1,24 @@
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-import jakarta.servlet.ServletConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import javax.sql.DataSource;
+import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import jakarta.servlet.http.HttpSession;
 
 /**
- * A servlet that takes input from a html <form> and talks to MySQL moviedbexample,
- * generates output as a html <table>
+ * A servlet that takes input from a HTML <form> and talks to MySQL moviedbexample,
+ * generates output as a HTML <table>
  */
 
-// Declaring a WebServlet called FormServlet, which maps to url "/form"
 @WebServlet(name = "LoginServlet", urlPatterns = "/login")
 public class LoginServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("text/html");
-        String recaptchaResponse = request.getParameter("g-recaptcha-response");
-        String secretKey = "6LeLunIqAAAAALrN77rqthLy2JmkUPeD1DTxEGGh";
-
-        boolean isRecaptchaVerified = RecaptchaVerifier.verify(recaptchaResponse, secretKey);
-        if (!isRecaptchaVerified) {
-            response.sendRedirect("login.html?error=recaptcha"); // Redirect with error if verification fails
-            return;
-        }
 
         String email = request.getParameter("email");
         String password = request.getParameter("password");
@@ -59,7 +46,6 @@ public class LoginServlet extends HttpServlet {
                 statement.close();
                 dbCon.close();
                 response.sendRedirect("main.html");
-
             } else {
                 response.sendRedirect("login.html?error=invalid_credentials");
             }
@@ -74,4 +60,3 @@ public class LoginServlet extends HttpServlet {
         response.sendRedirect("login.html");
     }
 }
-
