@@ -1,18 +1,24 @@
+
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import jakarta.servlet.ServletConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
+import javax.sql.DataSource;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import jakarta.servlet.http.HttpSession;
 
 /**
- * A servlet that takes input from a HTML <form> and talks to MySQL moviedbexample,
- * generates output as a HTML <table>
+ * A servlet that takes input from a html <form> and talks to MySQL moviedbexample,
+ * generates output as a html <table>
  */
 
+// Declaring a WebServlet called FormServlet, which maps to url "/form"
 @WebServlet(name = "LoginServlet", urlPatterns = "/login")
 public class LoginServlet extends HttpServlet {
 
@@ -28,26 +34,26 @@ public class LoginServlet extends HttpServlet {
             return;
         }
 
-        try (Connection dbCon = DbService.getRandomConnection()) {
-            String query = "SELECT id FROM customers WHERE email = ? AND password = ?";
-            PreparedStatement statement = dbCon.prepareStatement(query);
-            statement.setString(1, email);
-            statement.setString(2, password);
-
-            ResultSet rs = statement.executeQuery();
-            boolean success = rs.next();
-
+        try {
+            boolean success = VerifyPassword.verifyCredentials(email, password);
             if (success) {
                 HttpSession session = request.getSession();
                 session.setAttribute("user", email);
-                int userId = rs.getInt("id");
-                session.setAttribute("user_id", userId);
+                Connection dbCon = DbService.getRandomConnection();
+                String query = "SELECT id FROM customers WHERE email = ?";
+                PreparedStatement statement = dbCon.prepareStatement(query);
+                statement.setString(1, email);
+                ResultSet rs = statement.executeQuery();
+                if (rs.next()) {
+                    int userId = rs.getInt("id");
+                    session.setAttribute("user_id", userId);
+                }
                 rs.close();
                 statement.close();
+                dbCon.close();
                 response.sendRedirect("main.html");
+
             } else {
-                rs.close();
-                statement.close();
                 response.sendRedirect("login.html?error=invalid_credentials");
             }
         } catch (Exception e) {
