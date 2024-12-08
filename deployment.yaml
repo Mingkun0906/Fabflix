@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: team-beef-fabflix
 spec:
-  replicas: 2
+  replicas: 3
   selector:
     matchLabels:
       app: team-beef-fabflix
