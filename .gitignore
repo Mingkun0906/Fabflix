@@ -2,3 +2,4 @@
 *.iml
 target/
 /sql/movie-data.sql
+.DS_Store
