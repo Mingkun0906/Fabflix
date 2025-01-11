@@ -44,7 +44,7 @@ public class AutoCompleteServlet extends HttpServlet {
                     "WHERE MATCH(title) AGAINST(? IN BOOLEAN MODE) " +
                     "UNION " +
                     "SELECT DISTINCT id, title FROM movies " +
-                    "WHERE edth(LOWER(?), LOWER(title), 2) = 1 " +
+                    "WHERE LOWER(title) LIKE LOWER(?) " +
                     "ORDER BY title LIMIT 10";
 
             PreparedStatement stmt = conn.prepareStatement(sql);
