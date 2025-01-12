@@ -9,8 +9,11 @@ public class DbService {
 
     static {
         try {
+            System.out.println("Initializing DbService...");
             dataSource = (DataSource) new InitialContext().lookup("java:comp/env/jdbc/moviedb");
+            System.out.println("DbService initialized successfully.");
         } catch (NamingException e) {
+            e.printStackTrace();
             throw new RuntimeException("Failed to initialize database connections", e);
         }
     }
