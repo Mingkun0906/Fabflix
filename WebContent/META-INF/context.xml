@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <Context>
-    <!-- Master Database -->
     <Resource name="jdbc/moviedb"
               auth="Container"
               driverClassName="com.mysql.cj.jdbc.Driver"
               type="javax.sql.DataSource"
               username="mytestuser"
               password="My6$Password"
-              url="jdbc:mysql://localhost:3307/moviedb"/>
+              url="jdbc:mysql://localhost:3306/moviedb"
+              maxTotal="20"
+              maxIdle="10"
+              maxWaitMillis="-1"/>
 </Context>
