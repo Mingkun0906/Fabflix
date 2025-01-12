@@ -24,7 +24,7 @@ public class GenresServlet extends HttpServlet {
         response.setContentType("application/json");
         PrintWriter out = response.getWriter();
 
-        try (Connection conn = DbService.getRandomConnection()) {
+        try (Connection conn = DbService.getConnection()) {
             String query = "SELECT name FROM genres ORDER BY name ASC";
             PreparedStatement statement = conn.prepareStatement(query);
             ResultSet rs = statement.executeQuery();

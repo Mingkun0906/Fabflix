@@ -25,7 +25,7 @@ public class PaymentServlet extends HttpServlet {
         response.setContentType("application/json");
         PrintWriter out = response.getWriter();
 
-        try (Connection conn = DbService.getRandomConnection()) {
+        try (Connection conn = DbService.getConnection()) {
             String creditCard = request.getParameter("creditCard").replaceAll("\\s", "");
             String firstName = request.getParameter("firstName");
             String lastName = request.getParameter("lastName");

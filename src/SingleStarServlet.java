@@ -38,7 +38,7 @@ public class SingleStarServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
 
         // Get a connection from dataSource and let resource manager close the connection after usage.
-        try (Connection conn = DbService.getRandomConnection()) {
+        try (Connection conn = DbService.getConnection()) {
             // Get a connection from dataSource
 
             // Construct a query with parameter represented by "?"

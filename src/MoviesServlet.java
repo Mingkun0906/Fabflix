@@ -39,7 +39,7 @@ public class MoviesServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
 
         // Get a connection from dataSource and let resource manager close the connection after usage.
-        try (Connection conn = DbService.getRandomConnection()) {
+        try (Connection conn = DbService.getConnection()) {
             String title = request.getParameter("title");
             String year = request.getParameter("year");
             String director = request.getParameter("director");

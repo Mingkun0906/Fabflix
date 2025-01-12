@@ -23,7 +23,7 @@ public class AutoCompleteServlet extends HttpServlet {
         response.setContentType("application/json");
         PrintWriter out = response.getWriter();
 
-        try (Connection conn = DbService.getRandomConnection()) {
+        try (Connection conn = DbService.getConnection()) {
             String query = request.getParameter("query");
             if (query == null || query.trim().length() < 3) {
                 out.write("[]");

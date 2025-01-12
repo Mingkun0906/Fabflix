@@ -65,7 +65,7 @@ public class DashboardServlet extends HttpServlet {
 
             int movieYear = Integer.parseInt(yearStr);
 
-            try (Connection conn = DbService.getMasterConnection()) {
+            try (Connection conn = DbService.getConnection()) {
                 CallableStatement statement = conn.prepareCall("{CALL add_movie(?, ?, ?, ?, ?)}");
 
                 statement.setString(1, movieTitle);
@@ -111,7 +111,7 @@ public class DashboardServlet extends HttpServlet {
                 throw new IllegalArgumentException("Star name is requiredddddd");
             }
 
-            try (Connection conn = DbService.getMasterConnection()) {
+            try (Connection conn = DbService.getConnection()) {
                 String query = "SELECT MAX(CAST(SUBSTRING(id, 3) AS UNSIGNED)) as max_id FROM stars WHERE id LIKE 'nm%'";
                 Statement stmt = conn.createStatement();
                 ResultSet rs = stmt.executeQuery(query);
@@ -146,7 +146,7 @@ public class DashboardServlet extends HttpServlet {
     private void handleMetadataRequest(HttpServletResponse response) throws IOException {
         JsonArray jsonArray = new JsonArray();
 
-        try (Connection conn = DbService.getRandomConnection()) {
+        try (Connection conn = DbService.getConnection()) {
             DatabaseMetaData metaData = conn.getMetaData();
             ResultSet tables = metaData.getTables(null, null, "%", new String[]{"TABLE"});
 

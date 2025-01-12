@@ -22,7 +22,7 @@ public class StarsServlet extends HttpServlet {
         response.setContentType("application/json");
         PrintWriter out = response.getWriter();
 
-        try (Connection conn = DbService.getRandomConnection();
+        try (Connection conn = DbService.getConnection();
              PreparedStatement statement = conn.prepareStatement("SELECT * from stars");
              ResultSet rs = statement.executeQuery()) {
 

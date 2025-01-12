@@ -37,7 +37,7 @@ public class ConfirmationServlet extends HttpServlet {
                 return;
             }
 
-            Connection conn = DbService.getMasterConnection();
+            Connection conn = DbService.getConnection();
 
             try {
                 conn.setAutoCommit(false);

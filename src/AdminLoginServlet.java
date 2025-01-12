@@ -30,7 +30,7 @@ public class AdminLoginServlet extends HttpServlet {
             return;
         }
 
-        try (Connection connection = DbService.getRandomConnection()) {
+        try (Connection connection = DbService.getConnection()) {
             // First, retrieve the stored encrypted password and employee info
             String query = "SELECT password, fullname FROM employees WHERE email = ?";
             PreparedStatement statement = connection.prepareStatement(query);

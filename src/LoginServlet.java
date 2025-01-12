@@ -28,7 +28,7 @@ public class LoginServlet extends HttpServlet {
             return;
         }
 
-        try (Connection dbCon = DbService.getRandomConnection()) {
+        try (Connection dbCon = DbService.getConnection()) {
             String query = "SELECT id FROM customers WHERE email = ? AND password = ?";
             PreparedStatement statement = dbCon.prepareStatement(query);
             statement.setString(1, email);
